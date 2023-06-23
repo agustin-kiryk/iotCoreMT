@@ -2,6 +2,7 @@ package com.madreTierra.mapper;
 
 import com.madreTierra.auth.dto.RequestUserDto;
 import com.madreTierra.auth.dto.ResponseUserDto;
+import com.madreTierra.dto.UserDTO;
 import com.madreTierra.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,19 @@ public class UserMap {
         dto.setRole(entitySaved.getRole().getRoleName());
         dto.setUpdateDate(entitySaved.getUpdateDateTime());
         dto.setCreationDate(entitySaved.getCreateDateTime());
+
+        return dto;
+    }
+
+    public UserDTO userEntity2DTO(UserEntity user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getUserId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole().getRoleName());
+        dto.setCreationDate(user.getCreateDateTime());
+        dto.setUpdateDate(user.getUpdateDateTime());
 
         return dto;
     }

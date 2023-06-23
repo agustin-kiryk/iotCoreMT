@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("https://consorcio-production.up.railway.app")
+@CrossOrigin("*")
 
 
 public class UserAuthController {
@@ -43,6 +43,7 @@ public class UserAuthController {
         AuthenticationResponse response = userDetailsServices.signIn(authenticationRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 
 
 }
