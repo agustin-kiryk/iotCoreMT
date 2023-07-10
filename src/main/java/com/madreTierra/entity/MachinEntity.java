@@ -21,10 +21,13 @@ public class MachinEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MACHINE_ID")
-    private Long machineId;
+    @Column(name = "MACHINE_ID_INTERN")
+    private Long machineIdIntern;
 
-    @Column(name="END_STATE")
+    @Column(name = "MACHINE_ID")
+    private String machineId;
+
+    @Column(name="PRICE")
     private Double price;
 
     @Column(name="STATUS")

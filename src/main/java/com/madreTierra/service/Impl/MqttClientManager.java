@@ -1,5 +1,13 @@
 package com.madreTierra.service.Impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.madreTierra.entity.MachinEntity;
+import com.madreTierra.entity.TransactionEntity;
+import com.madreTierra.repository.MachineRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.crt.CRT;
 import software.amazon.awssdk.crt.CrtResource;
@@ -14,11 +22,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 @Component
 public class MqttClientManager {
+
+    @Autowired
+    MachineRepository machineRepository;
     static String certPath = "8210489b5e-certificate_pem.crt";
     static String keyPath = "8210489b5e-private_pem.key";
     static String caPath = "src/main/resources/AmazonRootCA1.pem";
@@ -72,17 +84,24 @@ public class MqttClientManager {
             } catch (Exception ex) {
                 throw new RuntimeException("Exception occurred during connect", ex);
             }
-
+            // Logica para suscribirse a topics al iniciar la aplicacion, los toma de bdd
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            //GESTIONAR SUSCRIOCIONES A LISTA DE TOPICS SEGUN EL CLIENTE
-            List<String> topics = Arrays.asList("dispensador/informacion/230517_1", "dispensador/informacion/230517_2", "dispensador/informacion/230517_3"); // Lista de topics a los que te quieres suscribir
-             //TODO: MODIFICAR LA LISTA PARA QUE SE SUCRIBAN TODOS LOS CLIENTES CREADOS
+            List<MachinEntity> machines = machineRepository.findAll();
+            List<String> topics = new ArrayList<>();
+            for (MachinEntity machine : machines){
+                String topicInfo = "dispensador/informacion/"+ machine.getMachineId().toString();
+                String topicTransaction = "dispensador/transacciones/"+machine.getMachineId().toString();
+                topics.add(topicInfo);
+                topics.add(topicTransaction); //TODO : PASAR TOPICS PARA QUE SE PUEDAN ACCEDER DESDE LA BASE DE DATOS COMO EL ID, ASI NO HYA QUE MODIFICAR EL CODIGO PARA AGREGAR MAS TOPICS
+            }
+
             List<CompletableFuture<Integer>> subscriptions = new ArrayList<>();
             for (String topic : topics) {
                 CompletableFuture<Integer> subscription = connection.subscribe(topic, QualityOfService.AT_LEAST_ONCE, (message) -> {
                     String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
-                    System.out.println("MESSAGE TOPIC:  "+ topic + payload);
-                    // No se realiza la desconexión ni el cierre de la conexión aquí
+                    formatMessage(payload, topic);
+                    System.out.println("MESSAGE TOPIC:  "+ topic + payload); // USAR PARA ADMINISTRAR LOS MENSAJES RECIBIDOS
+
                 });
                 subscriptions.add(subscription);
             }
@@ -110,5 +129,49 @@ public class MqttClientManager {
     }
     static String ciPropValue = System.getProperty("aws.crt.ci");
     static boolean isCI = ciPropValue != null && Boolean.valueOf(ciPropValue);
+
+    public void formatMessage(String payload,String topic){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(payload);
+
+            if (topic.startsWith("dispensador/informacion/")) {
+                // Mensaje de información
+                String idMachine = topic.substring("dispensador/informacion/".length());
+                String status = jsonNode.get("status").asText();
+                String currency = jsonNode.get("currency").asText();
+                String
+
+                // Actualizar los datos de la máquina en la base de datos
+                MachinEntity machine = machineRepository.findByMachineId(idMachine);
+                if (machine != null) {
+                    machine.setStatus(status);
+                    machine.setCurrency(currency);
+                    machine.setStatus(prices);
+                    machine.setControl(control);
+                    machineRepository.save(machine);
+
+                    System.out.println("Datos actualizados en la base de datos para la máquina con id: " + idMachine);
+                }
+            } else if (topic.startsWith("dispensador/transacciones/")) {
+                // Mensaje de transacciones
+                String idMachine = topic.substring("dispensador/transacciones/".length());
+                JsonNode transactionsNode = jsonNode.get("transactions");
+                List<TransactionEntity> transactions = objectMapper.convertValue(transactionsNode, new TypeReference<List<TransactionEntity>>() {});
+
+                // Guardar las transacciones en la base de datos
+                for (TransactionEntity transaction : transactions) {
+                    transaction.setIdMachine(idMachine);
+                    transactionRepository.save(transaction);
+                }
+
+                System.out.println("Transacciones guardadas en la base de datos para la máquina con id: " + idMachine);
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
 }
