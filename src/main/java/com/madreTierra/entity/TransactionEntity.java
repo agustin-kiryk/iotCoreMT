@@ -14,7 +14,8 @@ public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "ID_BACK")
+    private Long idBack;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MACHINE_ID")
     private MachinEntity machine;

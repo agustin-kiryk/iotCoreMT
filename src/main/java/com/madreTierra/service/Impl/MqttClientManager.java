@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.TransactionEntity;
+import com.madreTierra.enumeration.LightSwitch;
+import com.madreTierra.enumeration.ValveFill;
+import com.madreTierra.enumeration.ValveWash;
+import com.madreTierra.enumeration.WaterPumpSwich;
 import com.madreTierra.repository.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +30,9 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+
+import static java.awt.SystemColor.control;
+
 @Component
 public class MqttClientManager {
 
@@ -39,7 +46,7 @@ public class MqttClientManager {
     static int port = Integer.parseInt(("8883"));
     static String proxyHost = String.valueOf(Integer.parseInt("0"));
     static int proxyPort = Integer.parseInt("0");
-   // static String topic = "dispensador/informacion/230517_1";
+    // static String topic = "dispensador/informacion/230517_1";
     static String message = "mensaje test";
 
     public void call() {
@@ -88,9 +95,9 @@ public class MqttClientManager {
             CountDownLatch countDownLatch = new CountDownLatch(1);
             List<MachinEntity> machines = machineRepository.findAll();
             List<String> topics = new ArrayList<>();
-            for (MachinEntity machine : machines){
-                String topicInfo = "dispensador/informacion/"+ machine.getMachineId().toString();
-                String topicTransaction = "dispensador/transacciones/"+machine.getMachineId().toString();
+            for (MachinEntity machine : machines) {
+                String topicInfo = "dispensador/informacion/" + machine.getMachineId().toString();
+                String topicTransaction = "dispensador/transacciones/" + machine.getMachineId().toString();
                 topics.add(topicInfo);
                 topics.add(topicTransaction); //TODO : PASAR TOPICS PARA QUE SE PUEDAN ACCEDER DESDE LA BASE DE DATOS COMO EL ID, ASI NO HYA QUE MODIFICAR EL CODIGO PARA AGREGAR MAS TOPICS
             }
@@ -100,7 +107,7 @@ public class MqttClientManager {
                 CompletableFuture<Integer> subscription = connection.subscribe(topic, QualityOfService.AT_LEAST_ONCE, (message) -> {
                     String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
                     formatMessage(payload, topic);
-                    System.out.println("MESSAGE TOPIC:  "+ topic + payload); // USAR PARA ADMINISTRAR LOS MENSAJES RECIBIDOS
+                    System.out.println("MESSAGE TOPIC:  " + topic + payload); // USAR PARA ADMINISTRAR LOS MENSAJES RECIBIDOS
 
                 });
                 subscriptions.add(subscription);
@@ -120,6 +127,7 @@ public class MqttClientManager {
         CrtResource.waitForNoResources();
         System.out.println("Complete!");
     }
+
     static void onApplicationFailure(Throwable cause) {
         if (isCI) {
             throw new RuntimeException("BasicPubSub execution failure", cause);
@@ -127,45 +135,59 @@ public class MqttClientManager {
             System.out.println("Exception encountered: " + cause.toString());
         }
     }
+
     static String ciPropValue = System.getProperty("aws.crt.ci");
     static boolean isCI = ciPropValue != null && Boolean.valueOf(ciPropValue);
 
-    public void formatMessage(String payload,String topic){
+    public void formatMessage(String payload, String topic) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode jsonNode = objectMapper.readTree(payload);
 
             if (topic.startsWith("dispensador/informacion/")) {
-                // Mensaje de información
-                String idMachine = topic.substring("dispensador/informacion/".length());
+                // Mensaje de información (GUARDA EL ULTIMO ESTADO)
+                String machineId = topic.substring("dispensador/informacion/".length());
+                //String machineId = jsonNode.get("idMachine").asText();
                 String status = jsonNode.get("status").asText();
                 String currency = jsonNode.get("currency").asText();
-                String
-
+                String price = jsonNode.get("price").asText();
+                String waterPump = jsonNode.get("water_pump").asText();
+                String light = jsonNode.get("light").asText();
+                String valveFill = jsonNode.get("valve_fill").asText();
+                String valveWash = jsonNode.get("valve_wash").asText();
                 // Actualizar los datos de la máquina en la base de datos
-                MachinEntity machine = machineRepository.findByMachineId(idMachine);
+                MachinEntity machine = machineRepository.findByMachineId(machineId);
                 if (machine != null) {
                     machine.setStatus(status);
                     machine.setCurrency(currency);
-                    machine.setStatus(prices);
-                    machine.setControl(control);
+                    machine.setPrice(Double.valueOf(price));
+                    machine.setWaterPump(WaterPumpSwich.valueOf(waterPump));
+                    machine.setLight(LightSwitch.valueOf(light));
+                    machine.setValveFill(ValveFill.valueOf(valveFill));
+                    machine.setValveWash(ValveWash.valueOf(valveWash));
                     machineRepository.save(machine);
 
-                    System.out.println("Datos actualizados en la base de datos para la máquina con id: " + idMachine);
+                    System.out.println("Datos actualizados en la base de datos para la máquina con id: " + machineId);
                 }
             } else if (topic.startsWith("dispensador/transacciones/")) {
+
                 // Mensaje de transacciones
                 String idMachine = topic.substring("dispensador/transacciones/".length());
-                JsonNode transactionsNode = jsonNode.get("transactions");
-                List<TransactionEntity> transactions = objectMapper.convertValue(transactionsNode, new TypeReference<List<TransactionEntity>>() {});
+                MachinEntity machine = machineRepository.findByMachineId(idMachine);
+                if (machine != null) {
+                    JsonNode transactionsNode = jsonNode.get("transactions");
+                    List<TransactionEntity> transactions = objectMapper.convertValue(transactionsNode, new TypeReference<List<TransactionEntity>>() {
+                    });
 
-                // Guardar las transacciones en la base de datos
-                for (TransactionEntity transaction : transactions) {
-                    transaction.setIdMachine(idMachine);
-                    transactionRepository.save(transaction);
+                    // Guardar las transacciones en la base de datos
+                    for (TransactionEntity transaction : transactions) {
+                        transaction.setMachine(machine);
+                        //  transaction.setIdTransaction();
+                        // transactionRepository.save(transaction); //TODO:// HACER LO MISO QUE EN INFORMACION PARA TRAER Y GUARDAR LOS DATOS
+                    }
+
+                    System.out.println("Transacciones guardadas en la base de datos para la máquina con id: " + idMachine);
                 }
-
-                System.out.println("Transacciones guardadas en la base de datos para la máquina con id: " + idMachine);
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
