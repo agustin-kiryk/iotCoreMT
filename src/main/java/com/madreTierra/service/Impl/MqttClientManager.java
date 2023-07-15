@@ -1,5 +1,6 @@
 package com.madreTierra.service.Impl;
 
+import com.amazonaws.util.IOUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,6 +26,8 @@ import software.amazon.awssdk.crt.mqtt.MqttClientConnectionEvents;
 import software.amazon.awssdk.crt.mqtt.QualityOfService;
 import software.amazon.awssdk.iot.AwsIotMqttConnectionBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,9 +45,12 @@ public class MqttClientManager {
     MachineRepository machineRepository;
     @Autowired
     TransactionRepository transactionRepository;
-    static String certPath = "src/main/resources/8210489b5e-certificate_pem.crt";
+    /*static String certPath = "src/main/resources/8210489b5e-certificate_pem.crt";
     static String keyPath = "src/main/resources/8210489b5e-private_pem.key";
-    static String caPath = "src/main/resources/AmazonRootCA1.pem";
+    static String caPath = "src/main/resources/AmazonRootCA1.pem";*/
+    static String certFileName = "8210489b5e-certificate_pem.crt";
+    static String keyFileName = "8210489b5e-private_pem.key";
+    static String caFileName = "AmazonRootCA1.pem";
     static String clientId = "230517_85";
     static String endpoint = "a2i1cbvebks9le-ats.iot.us-west-1.amazonaws.com";
     static int port = Integer.parseInt(("8883"));
@@ -69,6 +75,10 @@ public class MqttClientManager {
         };
 
         try {
+            String certPath = loadResourceAsString(certFileName);
+            String keyPath = loadResourceAsString(keyFileName);
+            String caPath = loadResourceAsString(caFileName);
+
             AwsIotMqttConnectionBuilder builder = AwsIotMqttConnectionBuilder.newMtlsBuilderFromPath(certPath, keyPath);
             if (caPath != "") {
                 builder.withCertificateAuthorityFromPath(null, caPath);
@@ -254,8 +264,21 @@ public class MqttClientManager {
             return false;
         }
     }
+    private String loadResourceAsString(String fileName) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+            if (inputStream != null) {
+                return IOUtils.toString(inputStream);
+            } else {
+                System.out.println("No se pudo encontrar el archivo de certificado: " + fileName);
+                return null;
+            }
+        } catch (IOException e) {
+            System.out.println("Error al cargar el archivo de certificado: " + fileName);
+            e.printStackTrace();
+            return null;
+        }
 
-}
+}}
 /*if(topic.startsWith("dispensador/balance/")){//---------BALANCE------------//
                 if (!jsonNode.has("dayTransactions")) {
                     System.out.println("Mensaje con formato incorrecto en el topic: " + topic + "  REVISAR EL FORMATO DE: " + payload);
