@@ -51,7 +51,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests().antMatchers("/auth/**",
                         "/api/**",
-                        "/v2/api-docs").permitAll()
+                        "/v2/api-docs",
+                        "/**").permitAll()  //TODO : REVISAR
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and().sessionManagement()
