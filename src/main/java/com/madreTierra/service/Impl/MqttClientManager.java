@@ -11,8 +11,11 @@ import com.madreTierra.enumeration.ValveFill;
 import com.madreTierra.enumeration.ValveWash;
 import com.madreTierra.enumeration.WaterPumpSwich;
 import com.madreTierra.repository.MachineRepository;
+import com.madreTierra.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import software.amazon.awssdk.crt.CRT;
 import software.amazon.awssdk.crt.CrtResource;
 import software.amazon.awssdk.crt.CrtRuntimeException;
@@ -23,10 +26,9 @@ import software.amazon.awssdk.crt.mqtt.QualityOfService;
 import software.amazon.awssdk.iot.AwsIotMqttConnectionBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -38,6 +40,8 @@ public class MqttClientManager {
 
     @Autowired
     MachineRepository machineRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
     static String certPath = "8210489b5e-certificate_pem.crt";
     static String keyPath = "8210489b5e-private_pem.key";
     static String caPath = "src/main/resources/AmazonRootCA1.pem";
@@ -98,6 +102,7 @@ public class MqttClientManager {
             for (MachinEntity machine : machines) {
                 String topicInfo = "dispensador/informacion/" + machine.getMachineId().toString();
                 String topicTransaction = "dispensador/transacciones/" + machine.getMachineId().toString();
+                String topicBalance = "dispensador/balance/"+ machine.getMachineId().toString();
                 topics.add(topicInfo);
                 topics.add(topicTransaction); //TODO : PASAR TOPICS PARA QUE SE PUEDAN ACCEDER DESDE LA BASE DE DATOS COMO EL ID, ASI NO HYA QUE MODIFICAR EL CODIGO PARA AGREGAR MAS TOPICS
             }
@@ -106,8 +111,12 @@ public class MqttClientManager {
             for (String topic : topics) {
                 CompletableFuture<Integer> subscription = connection.subscribe(topic, QualityOfService.AT_LEAST_ONCE, (message) -> {
                     String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
-                    formatMessage(payload, topic);
-                    System.out.println("MESSAGE TOPIC:  " + topic + payload); // USAR PARA ADMINISTRAR LOS MENSAJES RECIBIDOS
+                    // Verificar si el formato del mensaje es válido
+                    boolean isValidFormat = formatMessage(payload, topic);
+
+                    if (isValidFormat) {
+                        System.out.println("MESSAGE TOPIC:  " + topic + payload); // Utiliza para administrar los mensajes recibidos
+                    }
 
                 });
                 subscriptions.add(subscription);
@@ -139,15 +148,27 @@ public class MqttClientManager {
     static String ciPropValue = System.getProperty("aws.crt.ci");
     static boolean isCI = ciPropValue != null && Boolean.valueOf(ciPropValue);
 
-    public void formatMessage(String payload, String topic) {
+    public Boolean formatMessage(String payload, String topic) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode jsonNode = objectMapper.readTree(payload);
 
-            if (topic.startsWith("dispensador/informacion/")) {
-                // Mensaje de información (GUARDA EL ULTIMO ESTADO)
+            if (jsonNode == null) {
+                System.out.println("Mensaje con formato incorrecto en el topic: " + topic);
+                return false;
+            }
+
+            if (topic.startsWith("dispensador/informacion/")) {  //---------INFORMACION------------//
+                // Procesar mensaje de información
+                if (!jsonNode.has("status") || !jsonNode.has("currency") || !jsonNode.has("price")
+                        || !jsonNode.has("water_pump") || !jsonNode.has("light") || !jsonNode.has("valve_fill")
+                        || !jsonNode.has("valve_wash")) {
+                    System.out.println("Mensaje con formato incorrecto en el topic: " + topic + "  REVISAR EL FORMATO DE: " + payload);
+                    return false;
+                }
+
+                // Obtener los datos de la máquina
                 String machineId = topic.substring("dispensador/informacion/".length());
-                //String machineId = jsonNode.get("idMachine").asText();
                 String status = jsonNode.get("status").asText();
                 String currency = jsonNode.get("currency").asText();
                 String price = jsonNode.get("price").asText();
@@ -155,6 +176,7 @@ public class MqttClientManager {
                 String light = jsonNode.get("light").asText();
                 String valveFill = jsonNode.get("valve_fill").asText();
                 String valveWash = jsonNode.get("valve_wash").asText();
+
                 // Actualizar los datos de la máquina en la base de datos
                 MachinEntity machine = machineRepository.findByMachineId(machineId);
                 if (machine != null) {
@@ -169,31 +191,84 @@ public class MqttClientManager {
 
                     System.out.println("Datos actualizados en la base de datos para la máquina con id: " + machineId);
                 }
-            } else if (topic.startsWith("dispensador/transacciones/")) {
+            } else if (topic.startsWith("dispensador/transacciones/")) {  //---------TRANSACCIONES------------//
+                // Procesar mensaje de transacciones
+                if (!jsonNode.has("idMachine") || !jsonNode.has("currency") || !jsonNode.has("transactions")) {
+                    System.out.println("Mensaje con formato incorrecto en el topic: " + topic + "  REVISAR EL FORMATO DE: " + payload);
+                    return false;
+                }
 
-                // Mensaje de transacciones
-                String idMachine = topic.substring("dispensador/transacciones/".length());
-                MachinEntity machine = machineRepository.findByMachineId(idMachine);
-                if (machine != null) {
-                    JsonNode transactionsNode = jsonNode.get("transactions");
-                    List<TransactionEntity> transactions = objectMapper.convertValue(transactionsNode, new TypeReference<List<TransactionEntity>>() {
-                    });
+                String machineId = jsonNode.get("idMachine").asText();
+                String currency = jsonNode.get("currency").asText();
+                JsonNode transactionsNode = jsonNode.get("transactions");
 
-                    // Guardar las transacciones en la base de datos
-                    for (TransactionEntity transaction : transactions) {
-                        transaction.setMachine(machine);
-                        //  transaction.setIdTransaction();
-                        // transactionRepository.save(transaction); //TODO:// HACER LO MISO QUE EN INFORMACION PARA TRAER Y GUARDAR LOS DATOS
+                // Procesar cada transacción
+                for (JsonNode transactionNode : transactionsNode) {
+                    if (!transactionNode.has("idTransaction") || !transactionNode.has("amount")
+                            || !transactionNode.has("dispensedWater") || !transactionNode.has("date")) {
+                        System.out.println("Transacción con formato incorrecto en el topic: " + topic + "  REVISAR EL FORMATO DE: " + payload);
+                        continue;
                     }
 
-                    System.out.println("Transacciones guardadas en la base de datos para la máquina con id: " + idMachine);
+                    String idTransaction = transactionNode.get("idTransaction").asText();
+                    Double amount = transactionNode.get("amount").asDouble();
+                    Double dispensedWater = transactionNode.get("dispensedWater").asDouble();
+                    String dateStr = transactionNode.get("date").asText();
+
+                    // Convertir la cadena de fecha a un objeto LocalDateTime
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.ENGLISH);
+                    LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
+                    System.out.println("mensaje procesado ok ");
+
+                    // Verificar si la transacción ya existe en la base de datos para el mismo idTransaction y machineId
+                    List<TransactionEntity> existingTransactions = transactionRepository.findByTransactionIdAndMachineId(idTransaction, machineId);
+                    if (!existingTransactions.isEmpty()) {
+                        // Ya existe una transacción con el mismo idTransaction y misma máquina
+                        System.out.println("Transacción ya existe para la máquina con id: " + machineId);
+                        continue;
+                    }
+
+                    // Si no encontramos una transacción con el mismo idTransaction y misma máquina, entonces la creamos y guardamos
+                    MachinEntity machine = machineRepository.findByMachineId(machineId);
+                    if (machine == null) {
+                        // Máquina no encontrada, puedes manejar esto según tus necesidades
+                        continue;
+                    }
+
+                    TransactionEntity transaction = new TransactionEntity();
+                    transaction.setMachine(machine);
+                    transaction.setIdTransaction(idTransaction);
+                    transaction.setAmount(amount);
+                    transaction.setMachineId(machineId);
+                    transaction.setCurrency(currency);
+                    transaction.setDate(date);
+                    transaction.setDispensedWater(dispensedWater);
+                    transactionRepository.save(transaction);
+                    System.out.println("Transacción guardada en la base de datos para la máquina con id: " + machineId);
                 }
             }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("ERROR al formatear el mensaje, revisar formato de:  " + payload);
+            return false;
         }
-
-
     }
 
 }
+/*if(topic.startsWith("dispensador/balance/")){//---------BALANCE------------//
+                if (!jsonNode.has("dayTransactions")) {
+                    System.out.println("Mensaje con formato incorrecto en el topic: " + topic + "  REVISAR EL FORMATO DE: " + payload);
+                    return false;
+                }
+
+                JsonNode transactionsNode = jsonNode.get("dayTransactions");
+
+                for (JsonNode transactionNode : transactionsNode) {
+                    if (!transactionNode.has("litersWater") || !transactionNode.has("totalTransactions")
+                            || !transactionNode.has("totalAmount") || !transactionNode.has("date")) {
+                        System.out.println("Transacción con formato incorrecto en el topic: " + topic + "  REVISAR EL FORMATO DE: " + payload);
+                        continue;
+                    }
+                }
+            }*/
