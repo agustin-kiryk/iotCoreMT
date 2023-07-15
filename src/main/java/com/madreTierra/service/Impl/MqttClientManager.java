@@ -42,9 +42,9 @@ public class MqttClientManager {
     MachineRepository machineRepository;
     @Autowired
     TransactionRepository transactionRepository;
-    static String certPath = "/src/main/resources/8210489b5e-certificate_pem.crt";
-    static String keyPath = "/src/main/resources/8210489b5e-private_pem.key";
-    static String caPath = "/src/main/resources/AmazonRootCA1.pem";
+    static String certPath = "src/main/resources/8210489b5e-certificate_pem.crt";
+    static String keyPath = "src/main/resources/8210489b5e-private_pem.key";
+    static String caPath = "src/main/resources/AmazonRootCA1.pem";
     static String clientId = "230517_85";
     static String endpoint = "a2i1cbvebks9le-ats.iot.us-west-1.amazonaws.com";
     static int port = Integer.parseInt(("8883"));
