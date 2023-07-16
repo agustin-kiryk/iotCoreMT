@@ -25,11 +25,11 @@ public class MQTTConfig {
         //mqttSubscriber("dispensador/informacion/230517_1");
         String topic2 = comand.getComand();
         String topic = "dispensador/ret_informacion/230517_1";
-        List<Map<String, Object>> payloadList = comand.getPayload();
+        Map<String, Object> payloadList = comand.getPayload();
         ObjectMapper objectMapper = new ObjectMapper();
         String payload = objectMapper.writeValueAsString(payloadList);
         //String payload = "{\"state\":{\"reported\":{\"sensor\":3.0}}}";
-        //String payload =comand.getPayload() ;
+        //String payload =comand.getPayload();
 
         ObjectWriter objectWriter = objectMapper.writer();
         String processedJson = objectWriter.writeValueAsString(comand.getPayload());

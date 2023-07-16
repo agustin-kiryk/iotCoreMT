@@ -18,9 +18,10 @@ public class MQTTController {
     MQTTConfig mqttConfig;
     @PostMapping("/publish")
     public String publishMessaged(@RequestBody ComandDTO payload) throws IOException {
-
         mqttConfig.publishToShadow(payload);
-
-        return "message Published Successfully";
+        return "message Published Successfully";   // publicar topicos y mensajes
     }
+
+
+
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 public class ComandDTO   {
 
     private String comand;
-    private List<Map<String, Object>> payload;
+    private Map<String, Object> payload;
 
 
 }

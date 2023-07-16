@@ -16,4 +16,6 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     TransactionEntity findByIdTransaction(String idTransaction);
     @Query("SELECT t FROM TransactionEntity t WHERE t.idTransaction = :idTransaction AND t.machine.machineId = :machineId")
     List<TransactionEntity> findByTransactionIdAndMachineId(@Param("idTransaction") String idTransaction, @Param("machineId") String machineId);
+
+    List<TransactionEntity> findAllByMachineId(String machineId);
 }

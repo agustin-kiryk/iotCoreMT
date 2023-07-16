@@ -45,7 +45,7 @@ public class MqttClientManager {
     static String certPath = "certs/8210489b5e-certificate_pem.crt";
     static String keyPath = "certs/8210489b5e-private_pem.key";
     static String caPath = "certs/AmazonRootCA1.pem";
-    static String clientId = "230517_87";
+    static String clientId = "230517_888";
     static String endpoint = "a2i1cbvebks9le-ats.iot.us-west-1.amazonaws.com";
     static int port = Integer.parseInt(("8883"));
     static String proxyHost = String.valueOf(Integer.parseInt("0"));
@@ -237,7 +237,7 @@ public class MqttClientManager {
 
                     TransactionEntity transaction = new TransactionEntity();
                     transaction.setMachine(machine);
-                    transaction.setIdTransaction(idTransaction);
+                    transaction.setIdTransaction(Long.valueOf(idTransaction));
                     transaction.setAmount(amount);
                     transaction.setMachineId(machineId);
                     transaction.setCurrency(currency);

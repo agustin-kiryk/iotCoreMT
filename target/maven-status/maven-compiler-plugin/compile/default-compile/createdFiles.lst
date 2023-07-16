@@ -1,3 +1,4 @@
+com\madreTierra\mapper\TransactionsMap.class
 com\madreTierra\auth\config\SecurityConfiguration.class
 com\madreTierra\entity\MachinEntity.class
 com\madreTierra\dto\ComandDTO.class
@@ -10,6 +11,7 @@ com\madreTierra\enumeration\ValveFill.class
 com\madreTierra\exception\IdNotFound.class
 com\madreTierra\auth\dto\UserAuthDto.class
 com\madreTierra\repository\RoleRepository.class
+com\madreTierra\service\Impl\TransactionService.class
 com\madreTierra\controller\MQTTController.class
 com\madreTierra\utils\AwsConfig$1.class
 com\madreTierra\auth\dto\AuthenticationRequest$AuthenticationRequestBuilder.class
@@ -17,6 +19,7 @@ com\madreTierra\auth\dto\AuthenticationRequest.class
 com\madreTierra\service\IUserService.class
 com\madreTierra\repository\UserRepository.class
 com\madreTierra\utils\AppStartupRunner.class
+com\madreTierra\dto\TransactionDto.class
 com\madreTierra\controller\UserController.class
 com\madreTierra\enumeration\RoleName.class
 com\madreTierra\MadrreTierraIotCoreApplication.class
@@ -32,6 +35,7 @@ com\madreTierra\auth\service\UserDetailsImpl.class
 com\madreTierra\auth\dto\ResponseUserDto.class
 com\madreTierra\exception\ErrorDetails.class
 com\madreTierra\utils\AwsConfig.class
+com\madreTierra\controller\TransactionsController.class
 com\madreTierra\service\Impl\MqttClientManager.class
 com\madreTierra\enumeration\WaterPumpSwich.class
 com\madreTierra\exception\ParamNotFound.class
