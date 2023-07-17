@@ -9,9 +9,11 @@ C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\dto\
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\utils\AppConfig.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\entity\TransactionEntity.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\dto\ResponseUserDto.java
+C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\controller\MachineController.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\enumeration\ValveWash.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\service\JwtUtils.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\enumeration\ValveFill.java
+C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\service\Impl\MachineService.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\entity\RoleEntity.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\MadrreTierraIotCoreApplication.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\config\SecurityConfiguration.java
@@ -40,6 +42,7 @@ C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\utils\MQT
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\enumeration\LightSwitch.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\service\Impl\UserService.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\dto\MachineDTO.java
+C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\mapper\MachineMap.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\exception\ParamNotFound.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\service\Impl\TransactionService.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\controller\MQTTController.java
