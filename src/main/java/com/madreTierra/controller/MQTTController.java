@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/mqtt")
-@CrossOrigin("*")
+@CrossOrigin(origins= "*")
 
 public class MQTTController {
     @Autowired

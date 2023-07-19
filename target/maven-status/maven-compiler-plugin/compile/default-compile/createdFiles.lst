@@ -24,6 +24,7 @@ com\madreTierra\controller\UserController.class
 com\madreTierra\enumeration\RoleName.class
 com\madreTierra\MadrreTierraIotCoreApplication.class
 com\madreTierra\auth\controller\UserAuthController.class
+com\madreTierra\auth\config\CorsConfig.class
 com\madreTierra\enumeration\ValveWash.class
 com\madreTierra\auth\service\AuthEntryPointJwt.class
 com\madreTierra\repository\MachineRepository.class

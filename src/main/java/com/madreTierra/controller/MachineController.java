@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/machines")
-@CrossOrigin("*")
+@CrossOrigin(origins= "*")
 public class MachineController {
     @Autowired
     MachineService machineService;
