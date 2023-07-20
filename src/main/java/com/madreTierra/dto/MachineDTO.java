@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class MachineDTO {
-    private Long machineIdIntern;
+    private Long id;
     private String currency;
     private LightSwitch light;
     private String machineId;

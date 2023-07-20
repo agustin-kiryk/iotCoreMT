@@ -20,7 +20,7 @@ public class MachineMap {
                 dto.setStatus(machine.getStatus());
                 dto.setPrice(machine.getPrice());
                 dto.setCurrency(machine.getCurrency());
-                dto.setMachineIdIntern(machine.getMachineIdIntern());
+                dto.setId(machine.getMachineIdIntern());
                 dto.setValveFill(machine.getValveFill());
                 dto.setLight(machine.getLight());
                 dto.setValveWash(machine.getValveWash());
@@ -38,7 +38,7 @@ public class MachineMap {
         dto.setStatus(machine.getStatus());
         dto.setPrice(machine.getPrice());
         dto.setCurrency(machine.getCurrency());
-        dto.setMachineIdIntern(machine.getMachineIdIntern());
+        dto.setId(machine.getMachineIdIntern());
         dto.setValveFill(machine.getValveFill());
         dto.setLight(machine.getLight());
         dto.setValveWash(machine.getValveWash());
