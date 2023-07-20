@@ -12,7 +12,7 @@ public class TransactionDto {
     private LocalDate date;
     private Double dispensedWater;
     private Long transactionId;
-    private Long idBack;
+    private Long id;
     private String machineId;
     private Long machineIdBack;
 

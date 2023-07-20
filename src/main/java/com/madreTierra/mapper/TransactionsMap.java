@@ -21,7 +21,7 @@ public class TransactionsMap {
             transactionDto.setAmount(transaction.getAmount());
             transactionDto.setDispensedWater(transaction.getDispensedWater());
             transactionDto.setMachineId(transaction.getMachineId());
-            transactionDto.setIdBack(transaction.getIdBack());
+            transactionDto.setId(transaction.getIdBack());
             transactionDtos.add(transactionDto);
         }
         return transactionDtos;
