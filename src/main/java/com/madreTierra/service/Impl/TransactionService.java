@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,6 +40,19 @@ public class TransactionService {
     public List<TransactionDto> transactionByUserLogin(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
+        List<TransactionDto> allTransactions = new ArrayList<>();
+        for(MachinEntity machine : userMachines){
+            String machineId = machine.getMachineId().toString();
+            List<TransactionEntity> transactions = transactionRepository.findAllByMachineId(machineId);
+            List<TransactionDto> machineTransactions = transactionsMap.transactionEntityList2DTO(transactions);
+            allTransactions.addAll(machineTransactions);
+        }
+        return allTransactions;
+    }
+
+    public List<TransactionDto> transactionsByUserId(Long userId) {
+
+        List<MachinEntity> userMachines = userRepository.findById(userId).get().getMachines();
         List<TransactionDto> allTransactions = new ArrayList<>();
         for(MachinEntity machine : userMachines){
             String machineId = machine.getMachineId().toString();

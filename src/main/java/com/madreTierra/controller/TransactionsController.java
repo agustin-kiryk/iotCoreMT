@@ -26,4 +26,10 @@ public class TransactionsController {
         return ResponseEntity.ok().body(transactionService.transactionByUserLogin());
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TransactionDto>> getTxById(@PathVariable Long userId){
+        List<TransactionDto> txList = transactionService.transactionsByUserId(userId);
+        return ResponseEntity.ok().body(txList);
+    }
+
 }
