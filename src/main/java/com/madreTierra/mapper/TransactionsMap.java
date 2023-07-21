@@ -15,7 +15,7 @@ public class TransactionsMap {
         TransactionDto transactionDto;
         for(TransactionEntity transaction: transactions){
             transactionDto = new TransactionDto();
-            transactionDto.setTransactionId(transaction.getIdTransaction());
+            transactionDto.setTransactionId(Long.valueOf(transaction.getIdTransaction()));
             transactionDto.setCurrency(transaction.getCurrency());
             transactionDto.setDate(LocalDate.from(transaction.getDate()));
             transactionDto.setAmount(transaction.getAmount());

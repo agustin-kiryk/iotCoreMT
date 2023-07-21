@@ -20,7 +20,7 @@ public class TransactionEntity {
     @JoinColumn(name = "MACHINE_ID_BACK")
     private MachinEntity machine;
     @Column(name = "TRANSACTION_ID")
-    private Long idTransaction;
+    private String idTransaction;
     @Column(name = "AMOUNT")
     private Double amount;
     @Column(name = "CURRENCY")

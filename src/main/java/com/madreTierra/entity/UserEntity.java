@@ -34,6 +34,9 @@ public class UserEntity implements Serializable {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
+    @Column(name = "IMAGE")
+    private String image;
+
     @Column(name = "CREATION_DATE")
     @CreationTimestamp
     private Date createDateTime;

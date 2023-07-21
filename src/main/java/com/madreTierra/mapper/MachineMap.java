@@ -1,6 +1,7 @@
 package com.madreTierra.mapper;
 
 import com.madreTierra.dto.MachineDTO;
+import com.madreTierra.dto.MachineRequestDTO;
 import com.madreTierra.entity.MachinEntity;
 import org.springframework.stereotype.Component;
 
@@ -47,5 +48,11 @@ public class MachineMap {
         dto.setUserId(machine.getUser().getUserId());
 
         return dto;
+    }
+
+    public MachinEntity machineDTO2Entity(MachineRequestDTO machineRequestDTO) {
+        MachinEntity machin = new MachinEntity();
+        machin.setMachineId(machineRequestDTO.getMachineId());
+        return machin;
     }
 }

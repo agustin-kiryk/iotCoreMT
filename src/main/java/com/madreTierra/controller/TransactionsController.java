@@ -1,6 +1,7 @@
 package com.madreTierra.controller;
 
 import com.madreTierra.dto.TransactionDto;
+import com.madreTierra.entity.TransactionEntity;
 import com.madreTierra.service.Impl.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class TransactionsController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TransactionDto>> getTxById(@PathVariable Long userId){
         List<TransactionDto> txList = transactionService.transactionsByUserId(userId);
+        return ResponseEntity.ok().body(txList);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TransactionDto>> allTxs(){
+        List<TransactionDto> txList = transactionService.txsAll();
         return ResponseEntity.ok().body(txList);
     }
 

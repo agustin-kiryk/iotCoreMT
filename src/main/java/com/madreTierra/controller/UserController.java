@@ -2,6 +2,7 @@ package com.madreTierra.controller;
 
 import com.madreTierra.dto.MachineDTO;
 import com.madreTierra.dto.UserDTO;
+import com.madreTierra.dto.UserRequestDto;
 import com.madreTierra.service.IUserService;
 import com.madreTierra.service.Impl.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,19 @@ public class UserController {
     public ResponseEntity<List<MachineDTO>> getAllMachines(){
         return ResponseEntity.ok().body(machineService.getAllMachines());
     }
+
+    @PutMapping("/userLoged/{id}")
+    public ResponseEntity<UserDTO> updateUserLoged(@RequestParam UserRequestDto updatedDto) {
+        UserDTO dto = userService.updateUserLoged(updatedDto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestParam UserRequestDto updatedDto) {
+        UserDTO dto = userService.updateUser(id, updatedDto);
+        return ResponseEntity.ok().body(dto);
+    }
+
 
 
 }

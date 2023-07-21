@@ -62,4 +62,10 @@ public class TransactionService {
         }
         return allTransactions;
     }
+
+    public List<TransactionDto> txsAll() {
+        List<TransactionEntity> txsList = transactionRepository.findAll();
+        List<TransactionDto>txListReturn = transactionsMap.transactionEntityList2DTO(txsList);
+        return txListReturn;
+    }
 }

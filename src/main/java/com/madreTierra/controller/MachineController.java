@@ -1,6 +1,7 @@
 package com.madreTierra.controller;
 
 import com.madreTierra.dto.MachineDTO;
+import com.madreTierra.dto.MachineRequestDTO;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.service.Impl.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class MachineController {
     @GetMapping("/{machineId}")
     public ResponseEntity<MachineDTO> getMachineById(@PathVariable String machineId){
         return ResponseEntity.ok().body(machineService.getMachineByIdS(machineId));
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<MachineDTO> newMachine(MachineRequestDTO machineRequestDTO){
+        return ResponseEntity.ok().body(machineService.newMachine(machineRequestDTO));
+
     }
 
 }

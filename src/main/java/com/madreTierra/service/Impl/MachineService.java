@@ -1,9 +1,11 @@
 package com.madreTierra.service.Impl;
 
 import com.madreTierra.dto.MachineDTO;
+import com.madreTierra.dto.MachineRequestDTO;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.UserEntity;
+import com.madreTierra.exception.ParamNotFound;
 import com.madreTierra.mapper.MachineMap;
 import com.madreTierra.repository.MachineRepository;
 import com.madreTierra.repository.UserRepository;
@@ -42,5 +44,17 @@ public class MachineService {
             machineDTO = machineMap.machineEntity2DTO(machinEntity);
         }
         return machineDTO;
+    }
+
+    public MachineDTO newMachine(MachineRequestDTO machineRequestDTO) {
+
+        MachinEntity machine = machineRepository.findByMachineId(machineRequestDTO.getMachineId());
+        if(machine!=null){
+            throw new ParamNotFound("el nombre o id de maquina ya existe");
+        }
+        machine = machineMap.machineDTO2Entity(machineRequestDTO);
+        MachinEntity machineSaved = machineRepository.save(machine);
+        MachineDTO response = machineMap.machineEntity2DTO(machineSaved);
+        return response;
     }
 }
