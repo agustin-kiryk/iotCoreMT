@@ -70,6 +70,15 @@ public class UserService implements IUserService {
         return result;
     }
 
+    @Override
+    public UserDTO getUserLoged() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = this.userRepository.findByEmail(email);
+        UserDTO response = userMap.userEntity2DTO(user);
+
+        return response;
+    }
+
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getAll()
     {

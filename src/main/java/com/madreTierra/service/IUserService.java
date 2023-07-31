@@ -14,5 +14,7 @@ public interface IUserService {
     UserDTO updateUserLoged(UserRequestDto updatedDto);
 
     UserDTO updateUser(Long id, UserRequestDto updatedDto);
+
+    UserDTO getUserLoged();
 }
 

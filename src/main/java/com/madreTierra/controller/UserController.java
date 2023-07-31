@@ -48,6 +48,12 @@ public class UserController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @GetMapping("/userLogin")
+    public ResponseEntity<UserDTO> getUserLoged(){
+        UserDTO response = userService.getUserLoged();
+        return ResponseEntity.ok(response);
+    }
+
 
 
 }
