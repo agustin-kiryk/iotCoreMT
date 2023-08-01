@@ -166,6 +166,7 @@ public class TransactionService {
                                   // sumas para tabla de totales mensuales para clientes
     public List<MonthlySummaryDto> monthlySummaryByUserLogin() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email);
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
         List<TransactionDto> allTransactions = getAllTransactionsForMachines(userMachines);
         Map<YearMonth, List<TransactionDto>> transactionsByMonth = groupTransactionsByMonth(allTransactions);
@@ -173,6 +174,7 @@ public class TransactionService {
         List<MonthlySummaryDto> monthlySummaries = new ArrayList<>();
         transactionsByMonth.forEach((yearMonth, transactions) -> {
             MonthlySummaryDto summaryDto = new MonthlySummaryDto();
+            summaryDto.setId(user.getUserId());
             summaryDto.setMonth(yearMonth.getMonthValue());
             summaryDto.setYear(yearMonth.getYear());
             double totalAmount = calculateTotalAmount(transactions);
