@@ -1,5 +1,6 @@
 package com.madreTierra.controller;
 
+import com.madreTierra.dto.MonthlyMachineSummaryDto;
 import com.madreTierra.dto.MonthlySummaryDto;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.entity.TransactionEntity;
@@ -51,11 +52,11 @@ public class TransactionsController {
     }
 
     @GetMapping("/monthlySummaryByUserLogin")
-    public List<MonthlySummaryDto> getMonthlySummaryByUserLogin() {
+    public List<MonthlyMachineSummaryDto> getMonthlySummaryByUserLogin() {
         return transactionService.monthlySummaryByUserLogin();
     }
     @GetMapping("/currentMonthSummaryByUserLogin")
-    public MonthlySummaryDto getCurrentMonthSummaryByUserLogin() {
+    public List<MonthlyMachineSummaryDto> getCurrentMonthSummaryByUserLogin() {
         return transactionService.currentMonthSummaryByUserLogin();
     }
 

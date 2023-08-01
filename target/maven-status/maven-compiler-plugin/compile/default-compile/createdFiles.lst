@@ -53,6 +53,7 @@ com\madreTierra\controller\MachineController.class
 com\madreTierra\auth\service\seeder\StartData.class
 com\madreTierra\exception\CustomExceptionHandler.class
 com\madreTierra\auth\service\UserDetailsCustomService.class
+com\madreTierra\dto\MonthlyMachineSummaryDto.class
 com\madreTierra\dto\UserDTO.class
 com\madreTierra\service\Impl\UserService.class
 com\madreTierra\mapper\MachineMap.class

@@ -1,5 +1,6 @@
 package com.madreTierra.service.Impl;
 
+import com.madreTierra.dto.MonthlyMachineSummaryDto;
 import com.madreTierra.dto.MonthlySummaryDto;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.entity.MachinEntity;
@@ -40,11 +41,11 @@ public class TransactionService {
         return txResponse;
     }
 
-    public List<TransactionDto> transactionByUserLogin(){
+    public List<TransactionDto> transactionByUserLogin() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
         List<TransactionDto> allTransactions = new ArrayList<>();
-        for(MachinEntity machine : userMachines){
+        for (MachinEntity machine : userMachines) {
             String machineId = machine.getMachineId().toString();
             List<TransactionEntity> transactions = transactionRepository.findAllByMachineId(machineId);
             List<TransactionDto> machineTransactions = transactionsMap.transactionEntityList2DTO(transactions);
@@ -57,7 +58,7 @@ public class TransactionService {
 
         List<MachinEntity> userMachines = userRepository.findById(userId).get().getMachines();
         List<TransactionDto> allTransactions = new ArrayList<>();
-        for(MachinEntity machine : userMachines){
+        for (MachinEntity machine : userMachines) {
             String machineId = machine.getMachineId().toString();
             List<TransactionEntity> transactions = transactionRepository.findAllByMachineId(machineId);
             List<TransactionDto> machineTransactions = transactionsMap.transactionEntityList2DTO(transactions);
@@ -68,7 +69,7 @@ public class TransactionService {
 
     public List<TransactionDto> txsAll() {
         List<TransactionEntity> txsList = transactionRepository.findAll();
-        List<TransactionDto>txListReturn = transactionsMap.transactionEntityList2DTO(txsList);
+        List<TransactionDto> txListReturn = transactionsMap.transactionEntityList2DTO(txsList);
         return txListReturn;
     }
 
@@ -163,29 +164,39 @@ public class TransactionService {
 
         return result;
     }
-                                  // sumas para tabla de totales mensuales para clientes
-    public List<MonthlySummaryDto> monthlySummaryByUserLogin() {
+
+    // sumas para tabla de totales mensuales para clientes
+    public List<MonthlyMachineSummaryDto> monthlySummaryByUserLogin() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByEmail(email);
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
-        List<TransactionDto> allTransactions = getAllTransactionsForMachines(userMachines);
-        Map<YearMonth, List<TransactionDto>> transactionsByMonth = groupTransactionsByMonth(allTransactions);
+        List<MonthlyMachineSummaryDto> monthlyMachineSummaries = new ArrayList<>();
 
-        List<MonthlySummaryDto> monthlySummaries = new ArrayList<>();
-        transactionsByMonth.forEach((yearMonth, transactions) -> {
-            MonthlySummaryDto summaryDto = new MonthlySummaryDto();
-            summaryDto.setId(user.getUserId());
-            summaryDto.setMonth(yearMonth.getMonthValue());
-            summaryDto.setYear(yearMonth.getYear());
-            double totalAmount = calculateTotalAmount(transactions);
-            double totalWaterDispensed = calculateTotalWaterDispensed(transactions);
-            summaryDto.setTotalAmount(totalAmount);
-            summaryDto.setTotalWaterDispensed(totalWaterDispensed);
-            monthlySummaries.add(summaryDto);
-        });
+        for (MachinEntity machine : userMachines) {
+            List<TransactionDto> machineTransactions = getAllTransactionsForMachine(machine);
+            Map<YearMonth, List<TransactionDto>> transactionsByMonth = groupTransactionsByMonth(machineTransactions);
 
-        return monthlySummaries;
+            for (Map.Entry<YearMonth, List<TransactionDto>> entry : transactionsByMonth.entrySet()) {
+                YearMonth yearMonth = entry.getKey();
+                List<TransactionDto> transactions = entry.getValue();
+
+                MonthlyMachineSummaryDto monthlySummaryDto = new MonthlyMachineSummaryDto();
+                monthlySummaryDto.setMachineId(machine.getMachineId().toString());
+                monthlySummaryDto.setMonth(yearMonth.getMonthValue());
+                monthlySummaryDto.setYear(yearMonth.getYear());
+                double totalAmount = calculateTotalAmount(transactions);
+                double totalWaterDispensed = calculateTotalWaterDispensed(transactions);
+                monthlySummaryDto.setTotalAmount(totalAmount);
+                monthlySummaryDto.setTotalWaterDispensed(totalWaterDispensed);
+                monthlySummaryDto.setCost(0.111);
+                monthlySummaryDto.setRevenue(0.11111);
+                monthlySummaryDto.setStatus("test status");
+                monthlyMachineSummaries.add(monthlySummaryDto);
+            }
+        }
+
+        return monthlyMachineSummaries;
     }
+
     private double calculateTotalAmount(List<TransactionDto> transactions) {
         double totalAmount = 0.0;
         for (TransactionDto transaction : transactions) {
@@ -202,33 +213,51 @@ public class TransactionService {
         return totalWaterDispensed;
     }
 
-    public MonthlySummaryDto currentMonthSummaryByUserLogin() {
+    public List<MonthlyMachineSummaryDto> currentMonthSummaryByUserLogin() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
-        List<TransactionDto> allTransactions = getAllTransactionsForMachines(userMachines);
-        List<TransactionDto> currentMonthTransactions = filterTransactionsByCurrentMonth(allTransactions);
+        List<MonthlyMachineSummaryDto> currentMonthSummaries = new ArrayList<>();
 
-        MonthlySummaryDto summaryDto = new MonthlySummaryDto();
-        YearMonth currentYearMonth = YearMonth.now();
-        summaryDto.setMonth(currentYearMonth.getMonthValue());
-        summaryDto.setYear(currentYearMonth.getYear());
-        double totalAmount = calculateTotalAmount(currentMonthTransactions);
-        double totalWaterDispensed = calculateTotalWaterDispensed(currentMonthTransactions);
-        summaryDto.setTotalAmount(totalAmount);
-        summaryDto.setTotalWaterDispensed(totalWaterDispensed);
+        for (MachinEntity machine : userMachines) {
+            List<TransactionDto> machineTransactions = getAllTransactionsForMachine(machine);
+            List<TransactionDto> currentMonthTransactions = filterTransactionsByCurrentMonth(machineTransactions);
 
-        return summaryDto;
+            double totalAmount = calculateTotalAmount(currentMonthTransactions);
+            double totalWaterDispensed = calculateTotalWaterDispensed(currentMonthTransactions);
+
+            MonthlyMachineSummaryDto currentMonthSummaryDto = new MonthlyMachineSummaryDto();
+            currentMonthSummaryDto.setMachineId(machine.getMachineId().toString());
+            currentMonthSummaryDto.setMonth(YearMonth.now().getMonthValue());
+            currentMonthSummaryDto.setYear(YearMonth.now().getYear());
+            currentMonthSummaryDto.setTotalAmount(totalAmount);
+            currentMonthSummaryDto.setTotalWaterDispensed(totalWaterDispensed);
+            currentMonthSummaryDto.setCost(0.111);
+            currentMonthSummaryDto.setRevenue(0.11111);
+            currentMonthSummaryDto.setStatus("test status");
+
+            currentMonthSummaries.add(currentMonthSummaryDto);
+        }
+
+        return currentMonthSummaries;
     }
+
+
 
     private List<TransactionDto> filterTransactionsByCurrentMonth(List<TransactionDto> transactions) {
         YearMonth currentYearMonth = YearMonth.now();
         return transactions.stream()
                 .filter(transaction -> {
-                    LocalDate transactionDate = transaction.getTransactionDate() != null
+                    LocalDate transactionDate = transaction.getDate() != null
                             ? transaction.getDate()
                             : null;
                     return transactionDate != null && YearMonth.from(transactionDate).equals(currentYearMonth);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private List<TransactionDto> getAllTransactionsForMachine(MachinEntity machine) {
+        String machineId = machine.getMachineId().toString();
+        List<TransactionEntity> transactions = transactionRepository.findAllByMachineId(machineId);
+        return transactionsMap.transactionEntityList2DTO(transactions);
     }
 }
