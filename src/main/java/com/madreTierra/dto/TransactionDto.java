@@ -1,8 +1,11 @@
 package com.madreTierra.dto;
 
+import com.madreTierra.entity.TransactionEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class TransactionDto {
@@ -15,6 +18,10 @@ public class TransactionDto {
     private Long id;
     private String machineId;
     private Long machineIdBack;
+    private int month;
+    private int year;
+    private List<TransactionDto> transactions;
+    private LocalDate transactionDate;
 
 
 }

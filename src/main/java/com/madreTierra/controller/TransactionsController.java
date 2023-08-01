@@ -1,5 +1,6 @@
 package com.madreTierra.controller;
 
+import com.madreTierra.dto.MonthlySummaryDto;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.entity.TransactionEntity;
 import com.madreTierra.service.Impl.TransactionService;
@@ -37,6 +38,25 @@ public class TransactionsController {
     public ResponseEntity<List<TransactionDto>> allTxs(){
         List<TransactionDto> txList = transactionService.txsAll();
         return ResponseEntity.ok().body(txList);
+    }
+
+    @GetMapping("/byUserLoginAndMonth")
+    public List<TransactionDto> getTransactionsByUserLoginAndMonth() {
+        return transactionService.transactionsByUserLoginAndMonth();
+    }
+
+    @GetMapping("/byUserLoginSeparateByMonth")
+    public List<TransactionDto> getTransactionsByUserLoginSeparateByMonth() {
+        return transactionService.transactionsByUserLoginSeparateByMonth();
+    }
+
+    @GetMapping("/monthlySummaryByUserLogin")
+    public List<MonthlySummaryDto> getMonthlySummaryByUserLogin() {
+        return transactionService.monthlySummaryByUserLogin();
+    }
+    @GetMapping("/currentMonthSummaryByUserLogin")
+    public MonthlySummaryDto getCurrentMonthSummaryByUserLogin() {
+        return transactionService.currentMonthSummaryByUserLogin();
     }
 
 }
