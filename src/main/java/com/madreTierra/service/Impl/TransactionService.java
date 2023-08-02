@@ -168,6 +168,7 @@ public class TransactionService {
     // sumas para tabla de totales mensuales para clientes
     public List<MonthlyMachineSummaryDto> monthlySummaryByUserLogin() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email);
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
         List<MonthlyMachineSummaryDto> monthlyMachineSummaries = new ArrayList<>();
 
@@ -190,6 +191,7 @@ public class TransactionService {
                 monthlySummaryDto.setCost(0.111);
                 monthlySummaryDto.setRevenue(0.11111);
                 monthlySummaryDto.setStatus("test status");
+                monthlySummaryDto.setId(user.getUserId());
                 monthlyMachineSummaries.add(monthlySummaryDto);
             }
         }
@@ -215,6 +217,7 @@ public class TransactionService {
 
     public List<MonthlyMachineSummaryDto> currentMonthSummaryByUserLogin() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email);
         List<MachinEntity> userMachines = userRepository.findByEmail(email).getMachines();
         List<MonthlyMachineSummaryDto> currentMonthSummaries = new ArrayList<>();
 
@@ -234,6 +237,7 @@ public class TransactionService {
             currentMonthSummaryDto.setCost(0.111);
             currentMonthSummaryDto.setRevenue(0.11111);
             currentMonthSummaryDto.setStatus("test status");
+            currentMonthSummaryDto.setId(user.getUserId());
 
             currentMonthSummaries.add(currentMonthSummaryDto);
         }

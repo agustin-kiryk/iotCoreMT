@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class MonthlyMachineSummaryDto {
+    private Long id;
     private String machineId;
     private int month;
     private int year;
