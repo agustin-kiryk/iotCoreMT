@@ -60,4 +60,9 @@ public class TransactionsController {
         return transactionService.currentMonthSummaryByUserLogin();
     }
 
+    @GetMapping("/currentMonthSummaryByMachineId/{machineId}")
+    public List<MonthlyMachineSummaryDto> getCurrentMonthSummaryByUserLogin(@PathVariable String machineId) {
+        return transactionService.currentMonthSummaryByMachineId(machineId);
+    }
+
 }

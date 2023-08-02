@@ -45,7 +45,7 @@ public class MqttClientManager {
     static String certPath = "certs/8210489b5e-certificate_pem.crt";
     static String keyPath = "certs/8210489b5e-private_pem.key";
     static String caPath = "certs/AmazonRootCA1.pem";
-    static String clientId = "23052";
+    static String clientId = "2303";
     static String endpoint = "a2i1cbvebks9le-ats.iot.us-west-1.amazonaws.com";
     static int port = Integer.parseInt(("8883"));
     static String proxyHost = String.valueOf(Integer.parseInt("0"));
@@ -102,7 +102,7 @@ public class MqttClientManager {
             for (MachinEntity machine : machines) {
                 String topicInfo = "dispensador/informacion/" + machine.getMachineId().toString();
                 String topicTransaction = "dispensador/transacciones/" + machine.getMachineId().toString();
-                String topicBalance = "dispensador/balance/"+ machine.getMachineId().toString();
+                String topicBalance = "dispensador/balance/" + machine.getMachineId().toString();
                 topics.add(topicInfo);
                 topics.add(topicTransaction); //TODO : PASAR TOPICS PARA QUE SE PUEDAN ACCEDER DESDE LA BASE DE DATOS COMO EL ID, ASI NO HYA QUE MODIFICAR EL CODIGO PARA AGREGAR MAS TOPICS
             }

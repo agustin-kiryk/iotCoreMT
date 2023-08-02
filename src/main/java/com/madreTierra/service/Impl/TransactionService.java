@@ -264,4 +264,34 @@ public class TransactionService {
         List<TransactionEntity> transactions = transactionRepository.findAllByMachineId(machineId);
         return transactionsMap.transactionEntityList2DTO(transactions);
     }
+
+    public List<MonthlyMachineSummaryDto> currentMonthSummaryByMachineId(String machineId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email);
+        MachinEntity userMachine = machineRepository.findByMachineId(machineId);
+        List<MonthlyMachineSummaryDto> currentMonthSummaries = new ArrayList<>();
+
+
+            List<TransactionDto> machineTransactions = getAllTransactionsForMachine(userMachine);
+            List<TransactionDto> currentMonthTransactions = filterTransactionsByCurrentMonth(machineTransactions);
+
+            double totalAmount = calculateTotalAmount(currentMonthTransactions);
+            double totalWaterDispensed = calculateTotalWaterDispensed(currentMonthTransactions);
+
+            MonthlyMachineSummaryDto currentMonthSummaryDto = new MonthlyMachineSummaryDto();
+            currentMonthSummaryDto.setMachineId(machineId);
+            currentMonthSummaryDto.setMonth(YearMonth.now().getMonthValue());
+            currentMonthSummaryDto.setYear(YearMonth.now().getYear());
+            currentMonthSummaryDto.setTotalAmount(totalAmount);
+            currentMonthSummaryDto.setTotalWaterDispensed(totalWaterDispensed);
+            currentMonthSummaryDto.setCost(0.111);
+            currentMonthSummaryDto.setRevenue(0.11111);
+            currentMonthSummaryDto.setStatus("test status");
+            currentMonthSummaryDto.setId(user.getUserId());
+
+            currentMonthSummaries.add(currentMonthSummaryDto);
+
+
+        return currentMonthSummaries;
+    }
 }
