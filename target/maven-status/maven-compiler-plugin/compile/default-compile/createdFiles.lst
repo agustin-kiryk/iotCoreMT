@@ -57,6 +57,7 @@ com\madreTierra\dto\MonthlyMachineSummaryDto.class
 com\madreTierra\dto\UserDTO.class
 com\madreTierra\service\Impl\UserService.class
 com\madreTierra\mapper\MachineMap.class
+com\madreTierra\dto\StatsWidgetUserDTO.class
 com\madreTierra\dto\MachineRequestDTO.class
 com\madreTierra\service\Impl\MachineService.class
 com\madreTierra\utils\MQTTConfig.class

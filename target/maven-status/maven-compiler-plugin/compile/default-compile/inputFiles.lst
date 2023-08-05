@@ -26,6 +26,7 @@ C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\repositor
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\exception\ErrorDetails.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\controller\UserAuthController.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\enumeration\RoleName.java
+C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\dto\StatsWidgetUserDTO.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\dto\MonthlySummaryDto.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\service\UserDetailsCustomService.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\dto\MachinDTO.java
