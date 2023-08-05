@@ -1,5 +1,6 @@
 package com.madreTierra.entity;
 
+import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,11 +38,20 @@ public class UserEntity implements Serializable {
     @Column(name = "UPDATE_DATE")
     @UpdateTimestamp
     private Date updateDateTime;
+    @Column(name="ADRESS")
     private String adress;
+    @Column(name="DISTRICT")
     private String district;
+    @Column(name="IDIENTIFIER")
     private String idientifier;
+    @Column(name="PHONE")
     private String phone;
+    @Column(name="COST")
     private Double cost;
+    @Column(name="START_AT", updatable = true)
+    private Date startAt;
+    @Column
+    private String status;
     @ManyToOne()
     @JoinColumn(name = "roleId")
     private RoleEntity role;
@@ -54,6 +64,21 @@ public class UserEntity implements Serializable {
                     CascadeType.PERSIST
             })
     private List<MachinEntity> machines = new ArrayList<>();
+
+    public void addMachine(MachinEntity machine) {  //asociar una maquina
+        if (machine != null) {
+            machines.add(machine);
+            machine.setUser(this);
+        }
+    }
+
+    // Método para desasociar una máquina del usuario
+    public void removeMachine(MachinEntity machine) {
+        if (machine != null) {
+            machines.remove(machine);
+            machine.setUser(null);
+        }
+    }
 }
 /* private Date updateDateTime;
     private String adress;

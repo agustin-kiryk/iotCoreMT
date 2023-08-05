@@ -2,6 +2,7 @@ package com.madreTierra.controller;
 
 import com.madreTierra.dto.MachineDTO;
 import com.madreTierra.dto.MachineRequestDTO;
+import com.madreTierra.dto.StatsWidgetUserDTO;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.service.Impl.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,11 @@ public class MachineController {
     @PostMapping("/new")
     public ResponseEntity<MachineDTO> newMachine(MachineRequestDTO machineRequestDTO){
         return ResponseEntity.ok().body(machineService.newMachine(machineRequestDTO));
+    }
 
+    @GetMapping("/statsWidgetUser")
+    public ResponseEntity<StatsWidgetUserDTO> stastUser(){
+        return ResponseEntity.ok().body(machineService.statsUserwidget());
     }
 
 }

@@ -48,8 +48,6 @@ public class UserService implements IUserService {
                 ()-> new ParamNotFound("User ID Invalid"));
         if(!userEntity.equals(user))
             throw new ParamNotFound("User logged doesn't match with user being updated");
-        userEntity.setFirstName(updatedDto.getFirstName());
-        userEntity.setLastName(updatedDto.getLastName());
         userEntity.setUpdateDateTime(new Date());
         userEntity.setImage(updatedDto.getImage());
         UserEntity entitySaved= userRepository.save(userEntity);
@@ -79,12 +77,21 @@ public class UserService implements IUserService {
         return response;
     }
 
+    @Override
+    public UserEntity getUserById(Long userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(
+                ()-> new IdNotFound("el id de usuario es incorrecto"));
+        return user;
+    }
+
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getAll()
     {
         List<UserDTO> users= userService.listAllUsers();
         return ResponseEntity.ok().body(users);
     }
+
+
 
 
 

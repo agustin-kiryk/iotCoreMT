@@ -294,4 +294,5 @@ public class TransactionService {
 
         return currentMonthSummaries;
     }
+
 }
