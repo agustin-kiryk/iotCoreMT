@@ -10,6 +10,7 @@ import com.madreTierra.mapper.TransactionsMap;
 import com.madreTierra.repository.MachineRepository;
 import com.madreTierra.repository.TransactionRepository;
 import com.madreTierra.repository.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -284,7 +285,7 @@ public class TransactionService {
             currentMonthSummaryDto.setYear(YearMonth.now().getYear());
             currentMonthSummaryDto.setTotalAmount(totalAmount);
             currentMonthSummaryDto.setTotalWaterDispensed(totalWaterDispensed);
-            currentMonthSummaryDto.setCost(0.111);
+            currentMonthSummaryDto.setCost(generateInvoiceForMachine(machineId));
             currentMonthSummaryDto.setRevenue(0.11111);
             currentMonthSummaryDto.setStatus("test status");
             currentMonthSummaryDto.setId(user.getUserId());
@@ -294,5 +295,44 @@ public class TransactionService {
 
         return currentMonthSummaries;
     }
+
+    public double generateInvoiceForMachine(String machineId) {
+        MachinEntity machine = machineRepository.findByMachineId(machineId);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email);
+        if (machine == null) {
+            throw new IllegalArgumentException("La máquina con ID " + machineId + " no existe.");
+        }
+
+        // Obtener la fecha de inicio del ciclo de facturación para la máquina
+        LocalDate machineStartDate = user.getStartAt();
+        LocalDate startDate = machineStartDate.plusMonths(1).withDayOfMonth(1);
+
+        // Obtener la fecha final del ciclo de facturación (primer día del mes siguiente al de startDate)
+        LocalDate endDate = startDate.plusMonths(1);
+
+        // Obtener todas las transacciones de la máquina que ocurrieron en el período
+        List<TransactionEntity> transactions = transactionRepository.findAllByMachineIdAndDateBetween(
+                machineId, startDate.atStartOfDay(), endDate.atStartOfDay());
+
+        // Calcular el monto total vendido en el período
+        double totalAmountSold = calculateTotalAmountSold(transactions);
+
+        // Calcular el monto a pagar utilizando el porcentaje de derecho de marca de la máquina
+        double percentage = user.getCost();
+        double amountToPay = totalAmountSold * percentage / 100;
+
+        return amountToPay;
+    }
+
+    private double calculateTotalAmountSold(List<TransactionEntity> transactions) {
+        double totalAmountSold = 0.0;
+        for (TransactionEntity transaction : transactions) {
+            totalAmountSold += transaction.getAmount();
+        }
+        return totalAmountSold;
+    }
+
+
 
 }

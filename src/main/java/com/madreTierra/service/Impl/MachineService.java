@@ -75,7 +75,7 @@ public class MachineService {
         UserEntity user = userRepository.findByEmail(mail);
 
         LocalDate currentDate = LocalDate.now();
-        LocalDate startDate = user.getStartAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate startDate = user.getStartAt();
 
         int totalDaysInMonth = currentDate.lengthOfMonth();
         Period period = Period.between(startDate, currentDate);

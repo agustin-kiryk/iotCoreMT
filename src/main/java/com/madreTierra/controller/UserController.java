@@ -72,7 +72,7 @@ public class UserController {
         }
         // Asociar la máquina al usuario
         user.addMachine(machine);
-        user.setStartAt(new Date());
+        user.setStartAt(LocalDate.now());
         userRepository.save(user);
 
         return ResponseEntity.ok(user);

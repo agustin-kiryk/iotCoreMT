@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +50,7 @@ public class UserEntity implements Serializable {
     @Column(name="COST")
     private Double cost;
     @Column(name="START_AT", updatable = true)
-    private Date startAt;
+    private LocalDate startAt;
     @Column
     private String status;
     @ManyToOne()

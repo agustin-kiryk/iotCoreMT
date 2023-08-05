@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
@@ -18,4 +19,6 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     List<TransactionEntity> findByTransactionIdAndMachineId(@Param("idTransaction") String idTransaction, @Param("machineId") String machineId);
 
     List<TransactionEntity> findAllByMachineId(String machineId);
+
+    List<TransactionEntity> findAllByMachineIdAndDateBetween(String machineId, LocalDateTime localDateTime, LocalDateTime localDateTime1);
 }
