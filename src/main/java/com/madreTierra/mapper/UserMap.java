@@ -7,6 +7,9 @@ import com.madreTierra.entity.UserEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class UserMap {
 
@@ -49,5 +52,20 @@ public class UserMap {
         dto.setUpdateDate(user.getUpdateDateTime());
 
         return dto;
+    }
+
+    public List<UserDTO> userEntityList2DtoList(List<UserEntity> entities) {
+
+        List<UserDTO> userDtoList = new ArrayList<>();
+
+        for (UserEntity userEntity : entities) {
+
+            userDtoList.add(userEntity2DTO(userEntity));
+
+        }
+
+        return userDtoList;
+
+
     }
 }

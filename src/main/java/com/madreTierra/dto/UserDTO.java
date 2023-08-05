@@ -15,5 +15,6 @@ public class UserDTO {
     private RoleName role;
     private Date creationDate;
     private Date updateDate;
+    private String machineId;
 
 }
