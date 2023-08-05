@@ -17,7 +17,7 @@ public class TransactionsMap {
             transactionDto = new TransactionDto();
             transactionDto.setTransactionId(Long.valueOf(transaction.getIdTransaction()));
             transactionDto.setCurrency(transaction.getCurrency());
-            transactionDto.setDate(LocalDate.from(transaction.getDate()));
+            transactionDto.setDate(transaction.getDate());
             transactionDto.setAmount(transaction.getAmount());
             transactionDto.setDispensedWater(transaction.getDispensedWater());
             transactionDto.setMachineId(transaction.getMachineId());

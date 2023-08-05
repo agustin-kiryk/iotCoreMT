@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -120,7 +121,7 @@ public class TransactionService {
     private Map<YearMonth, List<TransactionDto>> groupTransactionsByMonth(List<TransactionDto> transactions) {
         Map<YearMonth, List<TransactionDto>> transactionsByMonth = new HashMap<>();
         for (TransactionDto transaction : transactions) {
-            LocalDate transactionDate = transaction.getDate() != null
+            LocalDateTime transactionDate = transaction.getDate() != null
                     ? transaction.getDate()
                     : null;
 
@@ -252,7 +253,7 @@ public class TransactionService {
         YearMonth currentYearMonth = YearMonth.now();
         return transactions.stream()
                 .filter(transaction -> {
-                    LocalDate transactionDate = transaction.getDate() != null
+                    LocalDateTime transactionDate = transaction.getDate() != null
                             ? transaction.getDate()
                             : null;
                     return transactionDate != null && YearMonth.from(transactionDate).equals(currentYearMonth);
@@ -278,61 +279,58 @@ public class TransactionService {
 
             double totalAmount = calculateTotalAmount(currentMonthTransactions);
             double totalWaterDispensed = calculateTotalWaterDispensed(currentMonthTransactions);
-
+            Map<String, Object> data = generateInvoiceForMachine(machineId, user);
             MonthlyMachineSummaryDto currentMonthSummaryDto = new MonthlyMachineSummaryDto();
             currentMonthSummaryDto.setMachineId(machineId);
             currentMonthSummaryDto.setMonth(YearMonth.now().getMonthValue());
             currentMonthSummaryDto.setYear(YearMonth.now().getYear());
             currentMonthSummaryDto.setTotalAmount(totalAmount);
             currentMonthSummaryDto.setTotalWaterDispensed(totalWaterDispensed);
-            currentMonthSummaryDto.setCost(generateInvoiceForMachine(machineId));
-            currentMonthSummaryDto.setRevenue(0.11111);
-            currentMonthSummaryDto.setStatus("test status");
+            currentMonthSummaryDto.setCost((Double) data.get("amountToPay"));
+            currentMonthSummaryDto.setRevenue((Double) data.get("revenue"));
             currentMonthSummaryDto.setId(user.getUserId());
-
             currentMonthSummaries.add(currentMonthSummaryDto);
 
 
         return currentMonthSummaries;
     }
 
-    public double generateInvoiceForMachine(String machineId) {
+    public Map<String, Object> generateInvoiceForMachine(String machineId, UserEntity user) {
         MachinEntity machine = machineRepository.findByMachineId(machineId);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByEmail(email);
         if (machine == null) {
             throw new IllegalArgumentException("La máquina con ID " + machineId + " no existe.");
         }
 
-        // Obtener la fecha de inicio del ciclo de facturación para la máquina
-        LocalDate machineStartDate = user.getStartAt();
-        LocalDate startDate = machineStartDate.plusMonths(1).withDayOfMonth(1);
+        // Obtener el primer día del mes en curso
+        LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
 
         // Obtener la fecha final del ciclo de facturación (primer día del mes siguiente al de startDate)
-        LocalDate endDate = startDate.plusMonths(1);
+        LocalDate endDate = firstDayOfMonth.plusMonths(1);
 
-        // Obtener todas las transacciones de la máquina que ocurrieron en el período
+        // Obtener todas las transacciones de la máquina que ocurrieron en el mes en curso
         List<TransactionEntity> transactions = transactionRepository.findAllByMachineIdAndDateBetween(
-                machineId, startDate.atStartOfDay(), endDate.atStartOfDay());
+                machineId, firstDayOfMonth.atStartOfDay(), endDate.atStartOfDay());
 
-        // Calcular el monto total vendido en el período
+        // Calcular el monto total vendido en el mes en curso
         double totalAmountSold = calculateTotalAmountSold(transactions);
 
         // Calcular el monto a pagar utilizando el porcentaje de derecho de marca de la máquina
         double percentage = user.getCost();
         double amountToPay = totalAmountSold * percentage / 100;
-
-        return amountToPay;
+        double revenue = totalAmountSold - amountToPay;
+        Map<String,Object> data = new HashMap<>();
+        data.put("amountToPay", amountToPay);
+        data.put("revenue", revenue);
+        return data;
     }
 
     private double calculateTotalAmountSold(List<TransactionEntity> transactions) {
         double totalAmountSold = 0.0;
         for (TransactionEntity transaction : transactions) {
-            totalAmountSold += transaction.getAmount();
+            totalAmountSold += transaction.getAmount(); // Ajuste del cálculo
         }
         return totalAmountSold;
     }
-
 
 
 }

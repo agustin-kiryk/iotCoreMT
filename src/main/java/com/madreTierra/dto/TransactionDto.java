@@ -4,6 +4,7 @@ import com.madreTierra.entity.TransactionEntity;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class TransactionDto {
 
     private Double amount;
     private String currency;
-    private LocalDate date;
+    private LocalDateTime date;
     private Double dispensedWater;
     private Long transactionId;
     private Long id;
