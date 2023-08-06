@@ -34,11 +34,13 @@ com\madreTierra\dto\MachinDTO.class
 com\madreTierra\enumeration\LightSwitch.class
 com\madreTierra\mapper\UserMap.class
 com\madreTierra\service\Impl\MqttClientManager$1.class
+com\madreTierra\dto\StatsAdminDTO.class
 com\madreTierra\auth\service\UserDetailsImpl.class
 com\madreTierra\auth\dto\ResponseUserDto.class
 com\madreTierra\exception\ErrorDetails.class
 com\madreTierra\utils\AwsConfig.class
 com\madreTierra\controller\TransactionsController.class
+com\madreTierra\entity\StatePayEntity.class
 com\madreTierra\service\Impl\MqttClientManager.class
 com\madreTierra\enumeration\WaterPumpSwich.class
 com\madreTierra\exception\ParamNotFound.class
