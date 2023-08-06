@@ -190,8 +190,8 @@ public class TransactionService {
                 double totalWaterDispensed = calculateTotalWaterDispensed(transactions);
                 monthlySummaryDto.setTotalAmount(totalAmount);
                 monthlySummaryDto.setTotalWaterDispensed(totalWaterDispensed);
-                monthlySummaryDto.setCost(0.111);
-                monthlySummaryDto.setRevenue(0.11111);
+                monthlySummaryDto.setCost(totalAmount * user.getCost()/100);
+                monthlySummaryDto.setRevenue(totalAmount - (totalAmount * user.getCost()/100));
                 monthlySummaryDto.setStatus("test status");
                 monthlySummaryDto.setId(user.getUserId());
                 monthlyMachineSummaries.add(monthlySummaryDto);
@@ -288,6 +288,7 @@ public class TransactionService {
             currentMonthSummaryDto.setTotalWaterDispensed(totalWaterDispensed);
             currentMonthSummaryDto.setCost((Double) data.get("amountToPay"));
             currentMonthSummaryDto.setRevenue((Double) data.get("revenue"));
+            currentMonthSummaryDto.setStatus("IN PROGRESS");
             currentMonthSummaryDto.setId(user.getUserId());
             currentMonthSummaries.add(currentMonthSummaryDto);
 

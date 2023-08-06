@@ -2,6 +2,7 @@ package com.madreTierra.controller;
 
 import com.madreTierra.dto.MonthlyMachineSummaryDto;
 import com.madreTierra.dto.MonthlySummaryDto;
+import com.madreTierra.dto.StatsAdminDTO;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.entity.TransactionEntity;
 import com.madreTierra.service.Impl.TransactionService;
@@ -63,6 +64,11 @@ public class TransactionsController {
     @GetMapping("/currentMonthSummaryByMachineId/{machineId}")
     public List<MonthlyMachineSummaryDto> getCurrentMonthSummaryByUserLogin(@PathVariable String machineId) {
         return transactionService.currentMonthSummaryByMachineId(machineId);
+    }
+
+    @GetMapping("/statsAdmin")
+    public StatsAdminDTO statsAdmin(){
+        return null;
     }
 
 }
