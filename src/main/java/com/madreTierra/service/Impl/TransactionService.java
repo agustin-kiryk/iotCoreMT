@@ -2,6 +2,7 @@ package com.madreTierra.service.Impl;
 
 import com.madreTierra.dto.MonthlyMachineSummaryDto;
 import com.madreTierra.dto.MonthlySummaryDto;
+import com.madreTierra.dto.StatsAdminDTO;
 import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.TransactionEntity;
@@ -333,5 +334,36 @@ public class TransactionService {
         return totalAmountSold;
     }
 
+
+    public StatsAdminDTO stastAdmin() {
+        Long totalUsers = userRepository.count();
+        Long totalMachines = machineRepository.count();
+
+        List<TransactionEntity> transactions = transactionRepository.findAll();
+        List<TransactionDto> transactions2Map = transactionsMap.transactionEntityList2DTO(transactions);
+        List<TransactionDto> transactionsDTO = filterTransactionsByCurrentMonth(transactions2Map);
+        double totalAmount = calculateTotalAmount(transactionsDTO);
+        double totalWaterDispensed = calculateTotalWaterDispensed(transactionsDTO);
+
+        double totalRevenue = 0.0;
+        for (TransactionDto transaction : transactionsDTO) {
+            MachinEntity machine = machineRepository.findByMachineId(transaction.getMachineId());
+            UserEntity user = machine.getUser();
+            Map<String, Object> data = generateInvoiceForMachine(transaction.getMachineId(), user);
+            double revenue = (Double) data.get("amountToPay");
+            totalRevenue += revenue;
+        }
+
+        double averageCost = totalRevenue;
+
+        StatsAdminDTO statsAdminDTO = new StatsAdminDTO();
+        statsAdminDTO.setUserTotals(totalUsers);
+        statsAdminDTO.setMachinesTotals(totalMachines);
+        statsAdminDTO.setAmount(totalAmount);
+        statsAdminDTO.setDispensedWater(totalWaterDispensed);
+        statsAdminDTO.setRevenue(averageCost);
+
+        return statsAdminDTO;
+    }
 
 }

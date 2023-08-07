@@ -48,27 +48,28 @@ public class TransactionsController {
     }
 
     @GetMapping("/byUserLoginSeparateByMonth")
-    public List<TransactionDto> getTransactionsByUserLoginSeparateByMonth() {
-        return transactionService.transactionsByUserLoginSeparateByMonth();
+    public ResponseEntity<List<TransactionDto>> getTransactionsByUserLoginSeparateByMonth() {
+        return ResponseEntity.ok().body(transactionService.transactionsByUserLoginSeparateByMonth());
     }
 
     @GetMapping("/monthlySummaryByUserLogin")
-    public List<MonthlyMachineSummaryDto> getMonthlySummaryByUserLogin() {
-        return transactionService.monthlySummaryByUserLogin();
+    public ResponseEntity<List<MonthlyMachineSummaryDto>> getMonthlySummaryByUserLogin() {
+        return ResponseEntity.ok().body(transactionService.monthlySummaryByUserLogin());
     }
     @GetMapping("/currentMonthSummaryByUserLogin")
-    public List<MonthlyMachineSummaryDto> getCurrentMonthSummaryByUserLogin() {
-        return transactionService.currentMonthSummaryByUserLogin();
+    public ResponseEntity<List<MonthlyMachineSummaryDto>> getCurrentMonthSummaryByUserLogin() {
+        return ResponseEntity.ok().body(transactionService.currentMonthSummaryByUserLogin());
     }
 
     @GetMapping("/currentMonthSummaryByMachineId/{machineId}")
-    public List<MonthlyMachineSummaryDto> getCurrentMonthSummaryByUserLogin(@PathVariable String machineId) {
-        return transactionService.currentMonthSummaryByMachineId(machineId);
+    public ResponseEntity<List<MonthlyMachineSummaryDto>> getCurrentMonthSummaryByUserLogin(@PathVariable String machineId) {
+        return ResponseEntity.ok().body(transactionService.currentMonthSummaryByMachineId(machineId));
     }
 
     @GetMapping("/statsAdmin")
-    public StatsAdminDTO statsAdmin(){
-        return null;
+    public ResponseEntity<StatsAdminDTO> statsAdmin(){
+        StatsAdminDTO response = transactionService.stastAdmin();
+        return ResponseEntity.ok().body(response);
     }
 
 }

@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class StatsAdminDTO {
 
-    private int machinesTotals;
-    private int dispensedWater;
+    private long machinesTotals;
+    private Double dispensedWater;
     private Double revenue;
     private Double amount;
-    private int userTotals;
+    private long userTotals;
 
 }
