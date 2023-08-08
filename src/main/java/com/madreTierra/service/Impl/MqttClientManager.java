@@ -53,6 +53,7 @@ public class MqttClientManager {
     // static String topic = "dispensador/informacion/230517_1";
     static String message = "mensaje test";
 
+
     public void call() {
         MqttClientConnectionEvents callbacks = new MqttClientConnectionEvents() {
             @Override
