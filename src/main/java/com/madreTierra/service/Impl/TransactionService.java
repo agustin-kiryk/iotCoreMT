@@ -402,5 +402,30 @@ public class TransactionService {
                 .collect(Collectors.toList());
     }
 
+    public List<MonthlyMachineSummaryDto> monthlySummaryForAllMachines() {
+        List<MachinEntity> allMachines = machineRepository.findAll();
+        Map<YearMonth, MonthlyMachineSummaryDto> monthlySummariesMap = new HashMap<>();
+
+        for (MachinEntity machine : allMachines) {
+            List<TransactionDto> machineTransactions = getAllTransactionsForMachine(machine);
+            Map<YearMonth, List<TransactionDto>> transactionsByMonth = groupTransactionsByMonth(machineTransactions);
+
+            for (Map.Entry<YearMonth, List<TransactionDto>> entry : transactionsByMonth.entrySet()) {
+                YearMonth yearMonth = entry.getKey();
+                List<TransactionDto> transactions = entry.getValue();
+
+                MonthlyMachineSummaryDto monthlySummaryDto = monthlySummariesMap.getOrDefault(yearMonth, new MonthlyMachineSummaryDto());
+                monthlySummaryDto.setMonth(yearMonth.getMonthValue());
+                monthlySummaryDto.setYear(yearMonth.getYear());
+                double totalAmount = monthlySummaryDto.getTotalAmount() + calculateTotalAmount(transactions);
+                double totalWaterDispensed = monthlySummaryDto.getTotalWaterDispensed() + calculateTotalWaterDispensed(transactions);
+                monthlySummaryDto.setTotalAmount(totalAmount);
+                monthlySummaryDto.setTotalWaterDispensed(totalWaterDispensed);
+                monthlySummariesMap.put(yearMonth, monthlySummaryDto);
+            }
+        }
+
+        return new ArrayList<>(monthlySummariesMap.values());
+    }
 
 }

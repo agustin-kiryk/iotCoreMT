@@ -78,4 +78,9 @@ public class TransactionsController {
         return ResponseEntity.ok(summaryDtoList);
     }
 
+    @GetMapping("/monthlySummaryAllMachines")
+    public List<MonthlyMachineSummaryDto> getMonthlySummaryForAllMachines() {
+        return transactionService.monthlySummaryForAllMachines();
+    }
+
 }

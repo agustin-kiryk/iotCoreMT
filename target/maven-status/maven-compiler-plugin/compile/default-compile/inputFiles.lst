@@ -6,6 +6,7 @@ C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\dto\Trans
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\service\AuthEntryPointJwt.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\utils\AwsConfig.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\repository\RoleRepository.java
+C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\dto\TransactionSummaryDto.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\auth\dto\AuthenticationResponse.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\utils\AppConfig.java
 C:\Users\Agustin\Desktop\iotMT\iotCoreMT\src\main\java\com\madreTierra\entity\TransactionEntity.java

@@ -2,6 +2,7 @@ com\madreTierra\mapper\TransactionsMap.class
 com\madreTierra\auth\config\SecurityConfiguration.class
 com\madreTierra\dto\MonthlySummaryDto.class
 com\madreTierra\entity\MachinEntity.class
+com\madreTierra\dto\TransactionSummaryDto.class
 com\madreTierra\dto\ComandDTO.class
 com\madreTierra\dto\MachineDTO.class
 com\madreTierra\utils\AppConfig.class
