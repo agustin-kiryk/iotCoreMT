@@ -22,5 +22,8 @@ public class UserDTO {
     private String status;
     private String adress;
     private long machinesTotals;
+    private String district;
+    private String document;
+    private String image;
 
 }

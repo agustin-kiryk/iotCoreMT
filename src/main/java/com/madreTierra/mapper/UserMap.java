@@ -54,6 +54,10 @@ public class UserMap {
         dto.setAdress(user.getAdress());
         dto.setPhone(user.getPhone());
         dto.setStatus(user.getStatus());
+        dto.setDistrict(user.getDistrict());
+        dto.setDocument(user.getDocument());
+        dto.setImage(user.getImage());
+        dto.setCreationDate(user.getCreateDateTime());
         dto.setMachinesTotals(user.getMachines().stream().count());
 
         return dto;

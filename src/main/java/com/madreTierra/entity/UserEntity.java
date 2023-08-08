@@ -52,8 +52,10 @@ public class UserEntity implements Serializable {
     private Double cost;
     @Column(name="START_AT", updatable = true)
     private LocalDate startAt;
-    @Column
+    @Column(name="STATUS")
     private String status;
+    @Column(name="DOCUMENT")
+    private String document;
     @ManyToOne()
     @JoinColumn(name = "roleId")
     private RoleEntity role;
