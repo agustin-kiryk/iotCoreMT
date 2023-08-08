@@ -1,9 +1,6 @@
 package com.madreTierra.controller;
 
-import com.madreTierra.dto.MonthlyMachineSummaryDto;
-import com.madreTierra.dto.MonthlySummaryDto;
-import com.madreTierra.dto.StatsAdminDTO;
-import com.madreTierra.dto.TransactionDto;
+import com.madreTierra.dto.*;
 import com.madreTierra.entity.TransactionEntity;
 import com.madreTierra.service.Impl.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +67,15 @@ public class TransactionsController {
     public ResponseEntity<StatsAdminDTO> statsAdmin(){
         StatsAdminDTO response = transactionService.stastAdmin();
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/summary/{year}/{month}")
+    public ResponseEntity<List<TransactionSummaryDto>> getAllTransactionsSummaryForYearAndMonth(
+            @PathVariable("year") int year,
+            @PathVariable("month") int month
+    ) {
+        List<TransactionSummaryDto> summaryDtoList = transactionService.getAllTransactionsSummaryForYearAndMonth(year, month);
+        return ResponseEntity.ok(summaryDtoList);
     }
 
 }

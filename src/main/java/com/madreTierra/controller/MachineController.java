@@ -33,7 +33,7 @@ public class MachineController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<MachineDTO> newMachine(MachineRequestDTO machineRequestDTO){
+    public ResponseEntity<MachineRequestDTO> newMachine(@RequestBody MachineRequestDTO machineRequestDTO){
         return ResponseEntity.ok().body(machineService.newMachine(machineRequestDTO));
     }
 

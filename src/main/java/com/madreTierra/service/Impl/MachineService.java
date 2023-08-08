@@ -53,15 +53,15 @@ public class MachineService {
         return machineDTO;
     }
 
-    public MachineDTO newMachine(MachineRequestDTO machineRequestDTO) {
+    public MachineRequestDTO newMachine(MachineRequestDTO machineRequestDTO) {
 
         MachinEntity machine = machineRepository.findByMachineId(machineRequestDTO.getMachineId());
         if(machine!=null){
             throw new ParamNotFound("el nombre o id de maquina ya existe");
         }
-        machine = machineMap.machineDTO2Entity(machineRequestDTO);
+        machine = machineMap.machineCompleteDTO2Entity(machineRequestDTO);
         MachinEntity machineSaved = machineRepository.save(machine);
-        MachineDTO response = machineMap.machineEntity2DTO(machineSaved);
+        MachineRequestDTO response = machineMap.machineCompleteEntity2DTO(machineSaved);
         return response;
     }
 

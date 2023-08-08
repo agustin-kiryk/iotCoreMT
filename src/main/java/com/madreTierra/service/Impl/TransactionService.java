@@ -1,9 +1,6 @@
 package com.madreTierra.service.Impl;
 
-import com.madreTierra.dto.MonthlyMachineSummaryDto;
-import com.madreTierra.dto.MonthlySummaryDto;
-import com.madreTierra.dto.StatsAdminDTO;
-import com.madreTierra.dto.TransactionDto;
+import com.madreTierra.dto.*;
 import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.TransactionEntity;
 import com.madreTierra.entity.UserEntity;
@@ -365,5 +362,45 @@ public class TransactionService {
 
         return statsAdminDTO;
     }
+
+    public List<TransactionSummaryDto> getAllTransactionsSummaryForYearAndMonth(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+
+        List<TransactionEntity> transactions = transactionRepository.findAll();
+        List<TransactionDto> transactions2Map = transactionsMap.transactionEntityList2DTO(transactions);
+        List<TransactionDto> transactionsDTO = filterTransactionsByYearAndMonth(transactions2Map, yearMonth);
+
+        Map<YearMonth, List<TransactionDto>> transactionsByMonth = groupTransactionsByMonth(transactionsDTO);
+
+        List<TransactionSummaryDto> summaryDtoList = new ArrayList<>();
+        for (Map.Entry<YearMonth, List<TransactionDto>> entry : transactionsByMonth.entrySet()) {
+            YearMonth currentYearMonth = entry.getKey();
+            List<TransactionDto> currentMonthTransactions = entry.getValue();
+
+            double totalAmount = calculateTotalAmount(currentMonthTransactions);
+            double totalWaterDispensed = calculateTotalWaterDispensed(currentMonthTransactions);
+
+            TransactionSummaryDto summaryDto = new TransactionSummaryDto();
+            summaryDto.setMonth(currentYearMonth.getMonthValue());
+            summaryDto.setYear(currentYearMonth.getYear());
+            summaryDto.setTotalAmount(totalAmount);
+            summaryDto.setTotalWaterDispensed(totalWaterDispensed);
+            // Setear otros campos si es necesario
+            summaryDtoList.add(summaryDto);
+        }
+
+        return summaryDtoList;
+    }
+    private List<TransactionDto> filterTransactionsByYearAndMonth(List<TransactionDto> transactions, YearMonth yearMonth) {
+        return transactions.stream()
+                .filter(transaction -> {
+                    LocalDateTime transactionDate = transaction.getDate() != null
+                            ? transaction.getDate()
+                            : null;
+                    return transactionDate != null && YearMonth.from(transactionDate).equals(yearMonth);
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

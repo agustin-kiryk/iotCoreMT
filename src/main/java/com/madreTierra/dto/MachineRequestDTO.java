@@ -6,6 +6,8 @@ import com.madreTierra.enumeration.ValveWash;
 import com.madreTierra.enumeration.WaterPumpSwich;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class MachineRequestDTO {
     private Long id;
@@ -18,4 +20,12 @@ public class MachineRequestDTO {
     private ValveWash valveWash;
     private WaterPumpSwich waterPumpSwich;
     private Long userId;
+    private String district;
+    private String detail;
+    private LocalDateTime stateAt;
+    private String adress;
+    private String model;
+    private String coment;
+    private String mail;
+
 }
