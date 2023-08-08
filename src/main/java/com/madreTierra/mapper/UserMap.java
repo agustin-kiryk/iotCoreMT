@@ -50,6 +50,11 @@ public class UserMap {
         dto.setRole(user.getRole().getRoleName());
         dto.setCreationDate(user.getCreateDateTime());
         dto.setUpdateDate(user.getUpdateDateTime());
+        dto.setCost(user.getCost());
+        dto.setAdress(user.getAdress());
+        dto.setPhone(user.getPhone());
+        dto.setStatus(user.getStatus());
+        dto.setMachinesTotals(user.getMachines().stream().count());
 
         return dto;
     }
