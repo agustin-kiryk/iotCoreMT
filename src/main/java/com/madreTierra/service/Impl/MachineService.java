@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,6 +33,7 @@ public class MachineService {
     MachineMap machineMap;
     @Autowired
     UserRepository userRepository;
+
     public List<MachineDTO> getMachineLoged() {
         String mail = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MachinEntity> userMachines = userRepository.findByEmail(mail).getMachines();
@@ -44,10 +47,10 @@ public class MachineService {
         return listDtos;
     }
 
-    public MachineDTO getMachineByIdS(String machineId){
+    public MachineDTO getMachineByIdS(String machineId) {
         MachinEntity machinEntity = machineRepository.findByMachineId(machineId);
         MachineDTO machineDTO = new MachineDTO();
-        if(machinEntity != null){
+        if (machinEntity != null) {
             machineDTO = machineMap.machineEntity2DTO(machinEntity);
         }
         return machineDTO;
@@ -56,7 +59,7 @@ public class MachineService {
     public MachineRequestDTO newMachine(MachineRequestDTO machineRequestDTO) {
 
         MachinEntity machine = machineRepository.findByMachineId(machineRequestDTO.getMachineId());
-        if(machine!=null){
+        if (machine != null) {
             throw new ParamNotFound("el nombre o id de maquina ya existe");
         }
         machine = machineMap.machineCompleteDTO2Entity(machineRequestDTO);
@@ -70,7 +73,7 @@ public class MachineService {
         return machine;
     }
 
-    public StatsWidgetUserDTO statsUserwidget() {
+    public List<StatsWidgetUserDTO> statsUserwidget() {
         String mail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(mail);
 
@@ -84,19 +87,37 @@ public class MachineService {
 
         int percentageCompletedCicle = (daysPassed * 100) / totalDaysInMonth;
 
-        StatsWidgetUserDTO dto = new StatsWidgetUserDTO();
-        dto.setDaysPercen(percentageCompletedCicle);
-        dto.setDaysDif(daysRemaining);
+        List<MachinEntity> userMachines = user.getMachines();
 
-        // Calcular el porcentaje que falta para completar la vida útil del filtro (8 meses)
-        int percentageRemainingToFilterChange = 100 - percentageCompletedCicle;
-        dto.setPercentageToFilterChange(percentageRemainingToFilterChange);
+        List<StatsWidgetUserDTO> statsList = new ArrayList<>();
+        for (MachinEntity machine : userMachines) {
+            StatsWidgetUserDTO dto = new StatsWidgetUserDTO();
+            dto.setMachineId(machine.getMachineId());
+            dto.setDaysPercen(percentageCompletedCicle);
+            dto.setDaysDif(daysRemaining);
 
-        // Calcular el mes para el cambio de filtro (8 meses después del inicio)
-        LocalDate filterChangeMonth = startDate.plusMonths(8);
-        int filterChangeMonthValue = filterChangeMonth.getMonthValue();
-        dto.setFilterChangeMonth(filterChangeMonthValue);
 
-        return dto;
+            // Calcular el porcentaje que falta para completar la vida útil del filtro (8 meses)
+            int percentageRemainingToFilterChange = 100 - percentageCompletedCicle;
+            dto.setPercentageToFilterChange(percentageRemainingToFilterChange);
+
+            // Calcular el mes para el cambio de filtro (8 meses después del inicio)
+            LocalDate filterChangeMonth = startDate.plusMonths(8);
+            int filterChangeMonthValue = filterChangeMonth.getMonthValue();
+            dto.setFilterChangeMonth(filterChangeMonthValue);
+
+            statsList.add(dto);
+        }
+
+        return statsList;
+    }
+
+    @Transactional
+    public void deleteMachine(String machineId) {
+        MachinEntity machine = machineRepository.findByMachineId(machineId);
+        if (machine != null) {
+            machineRepository.deleteById(machine.getMachineIdIntern());
+        } else throw new ParamNotFound("El id de maquina es incorrecto");
     }
 }
+

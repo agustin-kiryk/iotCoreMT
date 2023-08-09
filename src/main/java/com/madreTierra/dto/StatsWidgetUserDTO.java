@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class StatsWidgetUserDTO {
-
+    private String machineId;
     private int daysDif;
     private int daysPercen;
     private  int percentageToFilterChange;

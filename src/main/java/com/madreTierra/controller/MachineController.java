@@ -3,7 +3,6 @@ package com.madreTierra.controller;
 import com.madreTierra.dto.MachineDTO;
 import com.madreTierra.dto.MachineRequestDTO;
 import com.madreTierra.dto.StatsWidgetUserDTO;
-import com.madreTierra.dto.TransactionDto;
 import com.madreTierra.service.Impl.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +37,14 @@ public class MachineController {
     }
 
     @GetMapping("/statsWidgetUser")
-    public ResponseEntity<StatsWidgetUserDTO> stastUser(){
+    public ResponseEntity<List<StatsWidgetUserDTO>> stastUser(){
         return ResponseEntity.ok().body(machineService.statsUserwidget());
+    }
+
+    @DeleteMapping("/delete/{machineId}")
+    public ResponseEntity<String> deleteMachine(@PathVariable String machineId){
+        machineService.deleteMachine(machineId);
+        return ResponseEntity.ok("maquina borrada correctamente " + machineId);
     }
 
 }
