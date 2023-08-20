@@ -3,7 +3,10 @@ package com.madreTierra.mapper;
 import com.madreTierra.auth.dto.RequestUserDto;
 import com.madreTierra.auth.dto.ResponseUserDto;
 import com.madreTierra.dto.UserDTO;
+import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.UserEntity;
+import com.madreTierra.repository.MachineRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +15,9 @@ import java.util.List;
 
 @Component
 public class UserMap {
+    @Autowired
+    MachineRepository machineRepository;
+
 
     public UserEntity userAuthDto2Entity(RequestUserDto userDto) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -22,7 +28,12 @@ public class UserMap {
         userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userEntity.setUpdateDateTime(userDto.getUpdateDate());
         userEntity.setCreateDateTime(userDto.getCreationDate());
-
+        userEntity.setImage(userDto.getImage());
+        userEntity.setCost(userDto.getCost());
+        userEntity.setAdress(userDto.getAdress());
+        userEntity.setIdientifier(userDto.getDocument());
+        userEntity.setDistrict(userDto.getDistrict());
+        userEntity.setPhone(userDto.getPhone());
         return userEntity;
     }
 
@@ -37,6 +48,7 @@ public class UserMap {
         dto.setRole(entitySaved.getRole().getRoleName());
         dto.setUpdateDate(entitySaved.getUpdateDateTime());
         dto.setCreationDate(entitySaved.getCreateDateTime());
+        //TODO: COMPLETAR CON DATOS
 
         return dto;
     }

@@ -1,12 +1,8 @@
 package com.madreTierra.service.Impl;
 
-import com.madreTierra.dto.MachineDTO;
-import com.madreTierra.dto.MachineRequestDTO;
-import com.madreTierra.dto.StatsWidgetUserDTO;
-import com.madreTierra.dto.TransactionDto;
+import com.madreTierra.dto.*;
 import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.UserEntity;
-import com.madreTierra.exception.IdNotFound;
 import com.madreTierra.exception.ParamNotFound;
 import com.madreTierra.mapper.MachineMap;
 import com.madreTierra.repository.MachineRepository;
@@ -18,11 +14,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -118,6 +111,21 @@ public class MachineService {
         if (machine != null) {
             machineRepository.deleteById(machine.getMachineIdIntern());
         } else throw new ParamNotFound("El id de maquina es incorrecto");
+    }
+
+    public MachineEditDTO editMachine(String machineId, MachineEditDTO machineRequestDTO) {
+        MachinEntity machineEntity= machineRepository.findByMachineId(machineId);
+        if (machineEntity != null){
+        machineEntity.setAdress(machineRequestDTO.getAdress());
+        machineEntity.setComent(machineRequestDTO.getComent());
+        machineEntity.setDistrict(machineRequestDTO.getDistrict());
+        machineEntity.setPrice(machineRequestDTO.getPrice());
+        MachinEntity entitySaved= machineRepository.save(machineEntity);
+        MachineEditDTO result= machineMap.machineEntityEdit2DTO(entitySaved);
+        return result;
+        }else throw new ParamNotFound("el id de maquina no existe");
+
+
     }
 }
 

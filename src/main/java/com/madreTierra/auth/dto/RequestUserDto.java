@@ -20,4 +20,15 @@ public class RequestUserDto {
     private Date creationDate;
     private String jwt;
     private Date updateDate;
+    private String machineId;
+    private String phone;
+    private Double dispensedWater;
+    private Double cost;
+    private String status;
+    private String adress;
+    private String district;
+    private String document;
+    private String image;
+
+
 }

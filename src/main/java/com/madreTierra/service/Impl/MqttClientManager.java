@@ -45,7 +45,7 @@ public class MqttClientManager {
     static String certPath = "certs/8210489b5e-certificate_pem.crt";
     static String keyPath = "certs/8210489b5e-private_pem.key";
     static String caPath = "certs/AmazonRootCA1.pem";
-    static String clientId = "54564646";
+    static String clientId = "5454544_46";
     static String endpoint = "a2i1cbvebks9le-ats.iot.us-west-1.amazonaws.com";
     static int port = Integer.parseInt(("8883"));
     static String proxyHost = String.valueOf(Integer.parseInt("0"));
@@ -97,7 +97,7 @@ public class MqttClientManager {
                 throw new RuntimeException("Exception occurred during connect", ex);
             }
             // Logica para suscribirse a topics al iniciar la aplicacion, los toma de bdd
-            CountDownLatch countDownLatch = new CountDownLatch(1);
+            CountDownLatch countDownLatch = new CountDownLatch(0);
             List<MachinEntity> machines = machineRepository.findAll();
             List<String> topics = new ArrayList<>();
             for (MachinEntity machine : machines) {
@@ -125,7 +125,7 @@ public class MqttClientManager {
 
             CompletableFuture.allOf(subscriptions.toArray(new CompletableFuture[0])).get();
 
-            countDownLatch.await();
+           // countDownLatch.await();
 
 
         } catch (CrtRuntimeException | InterruptedException | ExecutionException ex) {

@@ -1,6 +1,7 @@
 package com.madreTierra.mapper;
 
 import com.madreTierra.dto.MachineDTO;
+import com.madreTierra.dto.MachineEditDTO;
 import com.madreTierra.dto.MachineRequestDTO;
 import com.madreTierra.entity.MachinEntity;
 import com.madreTierra.entity.UserEntity;
@@ -104,6 +105,16 @@ public class MachineMap {
         dto.setDistrict(machine.getDistrict());
         dto.setModel(machine.getModel());
         dto.setStateAt(LocalDateTime.now());
+
+        return dto;
+    }
+
+    public MachineEditDTO machineEntityEdit2DTO(MachinEntity machine) {
+        MachineEditDTO dto = new MachineEditDTO();
+        dto.setPrice(machine.getPrice());
+        dto.setAdress(machine.getAdress());
+        dto.setComent(machine.getComent());
+        dto.setDistrict(machine.getDistrict());
 
         return dto;
     }

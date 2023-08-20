@@ -1,6 +1,7 @@
 package com.madreTierra.controller;
 
 import com.madreTierra.dto.MachineDTO;
+import com.madreTierra.dto.MachineEditDTO;
 import com.madreTierra.dto.MachineRequestDTO;
 import com.madreTierra.dto.StatsWidgetUserDTO;
 import com.madreTierra.service.Impl.MachineService;
@@ -31,14 +32,14 @@ public class MachineController {
         return ResponseEntity.ok().body(machineService.getMachineByIdS(machineId));
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<MachineRequestDTO> newMachine(@RequestBody MachineRequestDTO machineRequestDTO){
-        return ResponseEntity.ok().body(machineService.newMachine(machineRequestDTO));
-    }
 
     @GetMapping("/statsWidgetUser")
     public ResponseEntity<List<StatsWidgetUserDTO>> stastUser(){
         return ResponseEntity.ok().body(machineService.statsUserwidget());
+    }
+    @PostMapping("/new")
+    public ResponseEntity<MachineRequestDTO> newMachine(@RequestBody MachineRequestDTO machineRequestDTO){
+        return ResponseEntity.ok().body(machineService.newMachine(machineRequestDTO));
     }
 
     @DeleteMapping("/delete/{machineId}")
@@ -46,5 +47,11 @@ public class MachineController {
         machineService.deleteMachine(machineId);
         return ResponseEntity.ok("maquina borrada correctamente " + machineId);
     }
+    @PutMapping("/edit/{machineId}")
+    public ResponseEntity<MachineEditDTO> editMachine(@PathVariable String machineId, @RequestBody MachineEditDTO machineRequestDTO){
+        MachineEditDTO response = machineService.editMachine(machineId,machineRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
 
 }
