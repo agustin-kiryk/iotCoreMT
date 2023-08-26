@@ -48,6 +48,9 @@ public class UserMap {
         dto.setRole(entitySaved.getRole().getRoleName());
         dto.setUpdateDate(entitySaved.getUpdateDateTime());
         dto.setCreationDate(entitySaved.getCreateDateTime());
+        dto.setCost(entitySaved.getCost());
+        dto.setImage(entitySaved.getImage());
+
         //TODO: COMPLETAR CON DATOS
 
         return dto;
