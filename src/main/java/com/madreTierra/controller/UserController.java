@@ -44,13 +44,13 @@ public class UserController {
         return ResponseEntity.ok().body(machineService.getAllMachines());
     }
 
-    @PutMapping("/userLoged/{id}")
+    @PatchMapping("/userLoged/{id}")
     public ResponseEntity<UserDTO> updateUserLoged(@RequestParam UserRequestDto updatedDto) {
         UserDTO dto = userService.updateUserLoged(updatedDto);
         return ResponseEntity.ok().body(dto);
     }
 
-    @PutMapping("/edit/{id}")
+    @PatchMapping("/edit/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestParam UserRequestDto updatedDto) {
         UserDTO dto = userService.updateUser(id, updatedDto);
         return ResponseEntity.ok().body(dto);

@@ -47,7 +47,7 @@ public class MachineController {
         machineService.deleteMachine(machineId);
         return ResponseEntity.ok("maquina borrada correctamente " + machineId);
     }
-    @PutMapping("/edit/{machineId}")
+    @PatchMapping("/edit/{machineId}")
     public ResponseEntity<MachineEditDTO> editMachine(@PathVariable String machineId, @RequestBody MachineEditDTO machineRequestDTO){
         MachineEditDTO response = machineService.editMachine(machineId,machineRequestDTO);
         return ResponseEntity.ok(response);
