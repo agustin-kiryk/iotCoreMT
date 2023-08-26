@@ -50,6 +50,7 @@ public class UserMap {
         dto.setCreationDate(entitySaved.getCreateDateTime());
         dto.setCost(entitySaved.getCost());
         dto.setImage(entitySaved.getImage());
+        dto.setDocument(entitySaved.getIdientifier());
 
         //TODO: COMPLETAR CON DATOS
 
