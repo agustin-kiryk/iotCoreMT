@@ -78,7 +78,7 @@ public class MqttClientManager {
                     .withClientId(clientId)
                     .withEndpoint(endpoint)
                     .withPort((short) port)
-                    .withCleanSession(true)
+                    .withCleanSession(false)
                     .withProtocolOperationTimeoutMs(60000);
             if (proxyHost != "" && proxyPort > 0) {
                 HttpProxyOptions proxyOptions = new HttpProxyOptions();
