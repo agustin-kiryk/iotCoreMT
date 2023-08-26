@@ -71,7 +71,7 @@ public class UserMap {
         dto.setPhone(user.getPhone());
         dto.setStatus(user.getStatus());
         dto.setDistrict(user.getDistrict());
-        dto.setDocument(user.getDocument());
+        dto.setDocument(user.getIdientifier());
         dto.setImage(user.getImage());
         dto.setCreationDate(user.getCreateDateTime());
         dto.setMachinesTotals(user.getMachines().stream().count());
