@@ -79,7 +79,7 @@ public class MqttClientManager {
                     .withEndpoint(endpoint)
                     .withPort((short) port)
                     .withCleanSession(false)
-                    .withProtocolOperationTimeoutMs(6000);
+                    .withProtocolOperationTimeoutMs(0);
             if (proxyHost != "" && proxyPort > 0) {
                 HttpProxyOptions proxyOptions = new HttpProxyOptions();
                 proxyOptions.setHost(String.valueOf(proxyHost));
@@ -125,7 +125,7 @@ public class MqttClientManager {
 
             CompletableFuture.allOf(subscriptions.toArray(new CompletableFuture[0])).get();
 
-           // countDownLatch.await();
+            countDownLatch.await();
 
 
         } catch (CrtRuntimeException | InterruptedException | ExecutionException ex) {
@@ -134,7 +134,7 @@ public class MqttClientManager {
 
         // No se realiza la desconexión ni el cierre de la conexión aquí
 
-       // CrtResource.waitForNoResources(); //todo: ver
+        CrtResource.waitForNoResources();
         System.out.println("Complete!");
     }
 
