@@ -79,7 +79,7 @@ public class MqttClientManager {
                     .withEndpoint(endpoint)
                     .withPort((short) port)
                     .withCleanSession(false)
-                    .withProtocolOperationTimeoutMs(60000);
+                    .withProtocolOperationTimeoutMs(6000);
             if (proxyHost != "" && proxyPort > 0) {
                 HttpProxyOptions proxyOptions = new HttpProxyOptions();
                 proxyOptions.setHost(String.valueOf(proxyHost));
@@ -87,7 +87,7 @@ public class MqttClientManager {
                 builder.withHttpProxyOptions(proxyOptions);
             }
             MqttClientConnection connection = builder.build();
-            builder.close();
+           // builder.close();
 
             CompletableFuture<Boolean> connected = connection.connect();
             try {
@@ -134,7 +134,7 @@ public class MqttClientManager {
 
         // No se realiza la desconexión ni el cierre de la conexión aquí
 
-        CrtResource.waitForNoResources();
+       // CrtResource.waitForNoResources(); //todo: ver
         System.out.println("Complete!");
     }
 
