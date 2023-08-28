@@ -83,6 +83,8 @@ public class UserEntity implements Serializable {
             machine.setUser(null);
         }
     }
+
+
 }
 /* private Date updateDateTime;
     private String adress;

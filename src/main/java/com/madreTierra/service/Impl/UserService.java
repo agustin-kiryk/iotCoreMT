@@ -63,6 +63,15 @@ public class UserService implements IUserService {
         userEntity.setLastName(updatedDto.getLastName());
         userEntity.setUpdateDateTime(new Date());
         userEntity.setImage(updatedDto.getImage());
+        userEntity.setEmail(updatedDto.getEmail());
+        userEntity.setPassword(updatedDto.getPassword());
+        userEntity.setAdress(updatedDto.getAdress());
+        userEntity.setCost(updatedDto.getCost());
+        userEntity.setDistrict(updatedDto.getDistrict());
+        userEntity.setIdientifier(updatedDto.getIdientifier());
+        userEntity.setPhone(updatedDto.getPhone());
+        userEntity.setStatus(updatedDto.getStatus());
+
         UserEntity entitySaved= userRepository.save(userEntity);
         UserDTO result=userMap.userEntity2DTO(entitySaved);
         return result;

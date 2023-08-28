@@ -44,14 +44,14 @@ public class UserController {
         return ResponseEntity.ok().body(machineService.getAllMachines());
     }
 
-    @PatchMapping("/userLoged/{id}")
-    public ResponseEntity<UserDTO> updateUserLoged(@RequestParam UserRequestDto updatedDto) {
+    @PatchMapping("/userLoged")
+    public ResponseEntity<UserDTO> updateUserLoged(@RequestBody UserRequestDto updatedDto) {
         UserDTO dto = userService.updateUserLoged(updatedDto);
         return ResponseEntity.ok().body(dto);
     }
 
     @PatchMapping("/edit/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestParam UserRequestDto updatedDto) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserRequestDto updatedDto) {
         UserDTO dto = userService.updateUser(id, updatedDto);
         return ResponseEntity.ok().body(dto);
     }
@@ -62,6 +62,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+/*
     @PostMapping("/{userId}/machines/{machineId}")
     public ResponseEntity<UserEntity> addMachineToUser(@PathVariable Long userId, @PathVariable String machineId) {
         UserEntity user = userService.getUserById(userId);
@@ -77,6 +78,7 @@ public class UserController {
 
         return ResponseEntity.ok(user);
     }
+*/
 
     @DeleteMapping("/{userId}/machines/{machineId}")
     public ResponseEntity<UserEntity> removeMachineFromUser(@PathVariable Long userId, @PathVariable String machineId) {

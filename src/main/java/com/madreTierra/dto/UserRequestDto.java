@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.Date;
 @Data
 public class UserRequestDto {
+
     private Long id;
     private String firstName;
     private String lastName;
@@ -15,4 +16,13 @@ public class UserRequestDto {
     private Date updateDate;
     private String machineId;
     private String image;
+    private String password;
+    private String adress;
+    private Double cost;
+    private String district;
+    private String idientifier;
+    private String phone;
+    private String status;
+
+
 }
