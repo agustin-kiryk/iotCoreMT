@@ -64,7 +64,7 @@ public class UserService implements IUserService {
         userEntity.setUpdateDateTime(new Date());
         userEntity.setImage(updatedDto.getImage());
         userEntity.setEmail(updatedDto.getEmail());
-        userEntity.setPassword(updatedDto.getPassword());
+       // userEntity.setPassword(updatedDto.getPassword());
         userEntity.setAdress(updatedDto.getAdress());
         userEntity.setCost(updatedDto.getCost());
         userEntity.setDistrict(updatedDto.getDistrict());

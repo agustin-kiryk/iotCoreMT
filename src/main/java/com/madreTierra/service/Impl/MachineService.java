@@ -120,6 +120,7 @@ public class MachineService {
         machineEntity.setComent(machineRequestDTO.getComent());
         machineEntity.setDistrict(machineRequestDTO.getDistrict());
         machineEntity.setPrice(machineRequestDTO.getPrice());
+       // machineEntity.setUser();
         MachinEntity entitySaved= machineRepository.save(machineEntity);
         MachineEditDTO result= machineMap.machineEntityEdit2DTO(entitySaved);
         return result;
