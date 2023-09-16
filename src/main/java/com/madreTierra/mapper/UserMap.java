@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -34,6 +36,7 @@ public class UserMap {
         userEntity.setIdientifier(userDto.getDocument());
         userEntity.setDistrict(userDto.getDistrict());
         userEntity.setPhone(userDto.getPhone());
+        userEntity.setStartAt(LocalDate.now());
         return userEntity;
     }
 
