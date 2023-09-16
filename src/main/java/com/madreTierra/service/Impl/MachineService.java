@@ -120,13 +120,17 @@ public class MachineService {
         machineEntity.setComent(machineRequestDTO.getComent());
         machineEntity.setDistrict(machineRequestDTO.getDistrict());
         machineEntity.setPrice(machineRequestDTO.getPrice());
-       // machineEntity.setUser();
+            if (machineRequestDTO.getUserId() != null) {
+               // addMachineUser; // Todo : terminar metodo
+            } 
         MachinEntity entitySaved= machineRepository.save(machineEntity);
         MachineEditDTO result= machineMap.machineEntityEdit2DTO(entitySaved);
         return result;
         }else throw new ParamNotFound("el id de maquina no existe");
-
-
+        
+    }
+    private static void addMachineUser(){
+        
     }
 }
 

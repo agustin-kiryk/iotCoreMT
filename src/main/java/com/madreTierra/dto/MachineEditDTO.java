@@ -8,5 +8,7 @@ public class MachineEditDTO {
     private String district;
     private Double price;
     private String adress;
+    private String userId;
+    private String machineId;
 
 }
